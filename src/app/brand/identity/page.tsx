@@ -1,3 +1,4 @@
+import Image from "next/image";
 import PageLayout from "@/components/layout/PageLayout";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc: string }) {
@@ -24,26 +25,32 @@ function SectionHeader({ number, title, desc }: { number: string; title: string;
   );
 }
 
-function LogoMark({ bg, textColor }: { bg: string; textColor: string }) {
+function LogoBg({ bg, label, children, border }: { bg: string; label: string; children: React.ReactNode; border?: string }) {
   return (
-    <div
-      style={{
-        width: 64,
-        height: 64,
-        borderRadius: 16,
-        background: bg,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontWeight: 900,
-        fontSize: 28,
-        color: textColor,
-        boxShadow: "0 0 32px rgba(136,206,17,0.3)",
-        letterSpacing: -1,
-        flexShrink: 0,
-      }}
-    >
-      G
+    <div style={{ borderRadius: 16, overflow: "hidden", border: border || "1px solid var(--color-border)" }}>
+      <div
+        style={{
+          background: bg,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: 160,
+          position: "relative",
+        }}
+      >
+        {children}
+      </div>
+      <div
+        style={{
+          padding: "10px 16px",
+          background: "var(--color-surface)",
+          borderTop: "1px solid var(--color-border)",
+        }}
+      >
+        <span style={{ fontSize: 11, color: "var(--color-text-muted)", fontWeight: 600, textTransform: "uppercase", letterSpacing: 1 }}>
+          {label}
+        </span>
+      </div>
     </div>
   );
 }
@@ -76,186 +83,354 @@ export default function IdentityPage() {
     <PageLayout
       title="Identidade da Marca"
       accentWord="Marca"
-      subtitle="Os elementos fundamentais da identidade visual GAMA — logomarca, cores primárias e tipografia de marca."
+      subtitle="Logotipos oficiais, cores e tipografia da família GAMA — Studio, TV e Engine."
       breadcrumb={[
         { label: "Brand", href: "/brand/identity" },
         { label: "Identity" },
       ]}
       badge="V3 · BRAND"
     >
-      {/* SECTION 01 — Logo */}
+      {/* SECTION 01 — Isotipo */}
       <section style={{ marginBottom: 64 }}>
         <SectionHeader
           number="01"
-          title="Logomarca"
-          desc="O símbolo G da GAMA — quadrado com cantos arredondados, sempre em verde sobre escuro ou preto sobre verde."
+          title="Isotipo — Símbolo G"
+          desc="O símbolo isolado da GAMA. Forma geométrica com recorte triangular característico no canto superior direito."
         />
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 20 }}>
-          {/* Dark bg */}
+        {/* Hero isotipo showcase */}
+        <div
+          className="glass-illuminated"
+          style={{
+            padding: "40px 48px",
+            borderRadius: 20,
+            marginBottom: 16,
+            display: "flex",
+            alignItems: "center",
+            gap: 40,
+          }}
+        >
           <div
-            className="glass-card"
             style={{
-              padding: 40,
+              width: 160,
+              height: 160,
               borderRadius: 20,
+              overflow: "hidden",
+              flexShrink: 0,
               display: "flex",
-              flexDirection: "column",
               alignItems: "center",
-              gap: 20,
-              background: "#161616",
+              justifyContent: "center",
+              position: "relative",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <LogoMark bg="#88ce11" textColor="#0a0a0a" />
-              <div>
-                <div style={{ fontWeight: 900, fontSize: 24, letterSpacing: -0.5 }}>GAMA</div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 10,
-                    color: "var(--color-text-muted)",
-                    textTransform: "uppercase",
-                    letterSpacing: 1,
-                  }}
-                >
-                  Design System
-                </div>
-              </div>
-            </div>
-            <span className="pill pill-muted" style={{ fontSize: 11 }}>
-              Sobre escuro
-            </span>
+            <Image
+              src="/brand/ISOTIPO_FULL_COLOR_GAMA_STUDIO.svg"
+              alt="GAMA Isotipo Full Color"
+              width={500}
+              height={624}
+              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 52%" }}
+              unoptimized
+            />
           </div>
-
-          {/* Light bg */}
-          <div
-            style={{
-              padding: 40,
-              borderRadius: 20,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 20,
-              background: "#f0f0f0",
-              border: "1px solid rgba(0,0,0,0.08)",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <LogoMark bg="#88ce11" textColor="#0a0a0a" />
-              <div>
-                <div
-                  style={{ fontWeight: 900, fontSize: 24, letterSpacing: -0.5, color: "#111111" }}
-                >
-                  GAMA
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 10,
-                    color: "#888888",
-                    textTransform: "uppercase",
-                    letterSpacing: 1,
-                  }}
-                >
-                  Design System
-                </div>
-              </div>
-            </div>
-            <span
+          <div style={{ flex: 1 }}>
+            <div
               style={{
-                fontSize: 11,
-                fontWeight: 700,
-                color: "#555",
-                background: "rgba(0,0,0,0.06)",
-                padding: "4px 10px",
-                borderRadius: 20,
+                fontFamily: "var(--font-display, var(--font-poppins))",
+                fontWeight: 900,
+                fontSize: 48,
+                letterSpacing: -1.5,
+                lineHeight: 1,
+                marginBottom: 8,
               }}
             >
-              Sobre claro
-            </span>
-          </div>
-
-          {/* Color bg */}
-          <div
-            style={{
-              padding: 40,
-              borderRadius: 20,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 20,
-              background: "linear-gradient(135deg, #88ce11 0%, #6fa80a 100%)",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <div
-                style={{
-                  width: 64,
-                  height: 64,
-                  borderRadius: 16,
-                  background: "#0a0a0a",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontWeight: 900,
-                  fontSize: 28,
-                  color: "#88ce11",
-                  flexShrink: 0,
-                }}
-              >
-                G
-              </div>
-              <div>
-                <div style={{ fontWeight: 900, fontSize: 24, letterSpacing: -0.5, color: "#0a0a0a" }}>
-                  GAMA
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 10,
-                    color: "rgba(0,0,0,0.5)",
-                    textTransform: "uppercase",
-                    letterSpacing: 1,
-                  }}
-                >
-                  Design System
-                </div>
-              </div>
+              GAMA
             </div>
-            <span
+            <div
               style={{
+                fontFamily: "var(--font-mono)",
                 fontSize: 11,
-                fontWeight: 700,
-                color: "#0a0a0a",
-                background: "rgba(0,0,0,0.1)",
-                padding: "4px 10px",
-                borderRadius: 20,
+                color: "var(--color-text-muted)",
+                textTransform: "uppercase",
+                letterSpacing: 2.5,
+                marginBottom: 16,
               }}
             >
-              Sobre brand
-            </span>
+              Marca Registrada · Símbolo Oficial
+            </div>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <span className="pill pill-green">Full Color</span>
+              <span className="pill pill-muted">Isotipo</span>
+              <span className="pill pill-muted">Símbolo G</span>
+            </div>
           </div>
         </div>
 
+        {/* Three color contexts */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 20 }}>
+          <LogoBg bg="#111111" label="Sobre escuro" border="1px solid rgba(255,255,255,0.06)">
+            <Image
+              src="/brand/ISOTIPO_LIGHT_GAMA_STUDIO.svg"
+              alt="GAMA Isotipo Light"
+              width={810}
+              height={1012}
+              style={{ width: 90, height: "auto", objectFit: "contain", filter: "brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(64deg)" }}
+              unoptimized
+            />
+          </LogoBg>
+
+          <LogoBg bg="#f5f5f5" label="Sobre claro">
+            <Image
+              src="/brand/ISOTIPO_LIGHT_GAMA_STUDIO.svg"
+              alt="GAMA Isotipo Light"
+              width={810}
+              height={1012}
+              style={{ width: 90, height: "auto", objectFit: "contain" }}
+              unoptimized
+            />
+          </LogoBg>
+
+          <LogoBg bg="linear-gradient(135deg, #88ce11 0%, #6fa80a 100%)" label="Sobre brand green">
+            <Image
+              src="/brand/ISOTIPO_LIGHT_GAMA_STUDIO.svg"
+              alt="GAMA Isotipo Light"
+              width={810}
+              height={1012}
+              style={{ width: 90, height: "auto", objectFit: "contain", filter: "brightness(0) invert(1)" }}
+              unoptimized
+            />
+          </LogoBg>
+        </div>
+
         {/* Clearspace rule */}
-        <div
-          className="glass-subtle"
-          style={{ padding: "20px 24px", borderRadius: 14 }}
-        >
-          <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 6 }}>
-            Regra de Espaço Livre
-          </div>
+        <div className="glass-subtle" style={{ padding: "20px 24px", borderRadius: 14 }}>
+          <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 6 }}>Regra de Espaço Livre</div>
           <p style={{ fontSize: 13, color: "var(--color-text-secondary)", margin: 0, lineHeight: 1.6 }}>
-            Mantenha ao redor da logomarca um espaço mínimo equivalente à <strong>altura da letra G</strong>. Nunca
+            Mantenha ao redor do símbolo um espaço mínimo equivalente à <strong>altura da letra G</strong>. Nunca
             coloque outros elementos visuais dentro dessa zona de proteção.
           </p>
         </div>
       </section>
 
-      {/* SECTION 02 — Brand Colors */}
+      {/* SECTION 02 — GAMA Studio Imagotipo */}
       <section style={{ marginBottom: 64 }}>
         <SectionHeader
           number="02"
+          title="Imagotipo — GAMA Studio"
+          desc="Combinação do símbolo G com o logotipo completo. Uso principal em contextos da agência."
+        />
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          {/* White bg — primary use */}
+          <div style={{ borderRadius: 20, overflow: "hidden", border: "1px solid var(--color-border)" }}>
+            <div
+              style={{
+                background: "#f9f9f9",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "24px 20px",
+              }}
+            >
+              <Image
+                src="/brand/IMAGOTIPO_LIGHT_GAMA_STUDIO.svg"
+                alt="GAMA Studio Imagotipo"
+                width={810}
+                height={1012}
+                style={{ width: "100%", maxWidth: 420, height: "auto" }}
+                unoptimized
+              />
+            </div>
+            <div style={{ padding: "14px 20px", background: "var(--color-surface)", borderTop: "1px solid var(--color-border)" }}>
+              <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 2 }}>Versão Light</div>
+              <div style={{ fontSize: 11, color: "var(--color-text-muted)" }}>Sobre fundos claros · Uso principal</div>
+            </div>
+          </div>
+
+          {/* Dark bg */}
+          <div style={{ borderRadius: 20, overflow: "hidden", border: "1px solid var(--color-border)" }}>
+            <div
+              style={{
+                background: "#111111",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "24px 20px",
+              }}
+            >
+              <Image
+                src="/brand/IMAGOTIPO_LIGHT_GAMA_STUDIO.svg"
+                alt="GAMA Studio Imagotipo Dark"
+                width={810}
+                height={1012}
+                style={{
+                  width: "100%",
+                  maxWidth: 420,
+                  height: "auto",
+                  filter: "brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(64deg)",
+                }}
+                unoptimized
+              />
+            </div>
+            <div style={{ padding: "14px 20px", background: "var(--color-surface)", borderTop: "1px solid var(--color-border)" }}>
+              <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 2 }}>Versão Dark</div>
+              <div style={{ fontSize: 11, color: "var(--color-text-muted)" }}>Sobre fundos escuros · Dark mode</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 03 — Sub-Marcas */}
+      <section style={{ marginBottom: 64 }}>
+        <SectionHeader
+          number="03"
+          title="Sub-Marcas"
+          desc="Família de marcas GAMA — cada vertical com identidade própria mantendo coerência com a marca-mãe."
+        />
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
+          {/* GAMA TV */}
+          <div style={{ borderRadius: 20, overflow: "hidden", border: "1px solid var(--color-border)" }}>
+            <div
+              style={{
+                background: "#f9f9f9",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "20px 16px",
+                gap: 12,
+              }}
+            >
+              <Image
+                src="/brand/IMAGOTIPO_LIGHT_GAMA_TV.svg"
+                alt="GAMA TV Imagotipo"
+                width={810}
+                height={1012}
+                style={{ width: "100%", maxWidth: 380, height: "auto" }}
+                unoptimized
+              />
+            </div>
+            <div style={{ padding: "14px 20px", background: "var(--color-surface)", borderTop: "1px solid var(--color-border)" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 2 }}>GAMA TV</div>
+                  <div style={{ fontSize: 11, color: "var(--color-text-muted)" }}>Vertical de mídia e conteúdo audiovisual</div>
+                </div>
+                <span className="pill pill-muted">Mídia</span>
+              </div>
+            </div>
+          </div>
+
+          {/* GAMA Engine */}
+          <div style={{ borderRadius: 20, overflow: "hidden", border: "1px solid var(--color-border)" }}>
+            <div
+              style={{
+                background: "#111111",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "20px 16px",
+                gap: 12,
+              }}
+            >
+              <Image
+                src="/brand/IMAGOTIPO_DARK_GAMA_ENGINE.svg"
+                alt="GAMA Engine Imagotipo"
+                width={810}
+                height={1012}
+                style={{ width: "100%", maxWidth: 380, height: "auto" }}
+                unoptimized
+              />
+            </div>
+            <div style={{ padding: "14px 20px", background: "var(--color-surface)", borderTop: "1px solid var(--color-border)" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 2 }}>GAMA Engine</div>
+                  <div style={{ fontSize: 11, color: "var(--color-text-muted)" }}>Vertical de tecnologia e desenvolvimento</div>
+                </div>
+                <span className="pill pill-blue">Tech</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Logotipos Engine */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          <div
+            style={{
+              borderRadius: 14,
+              overflow: "hidden",
+              border: "1px solid var(--color-border)",
+              display: "flex",
+              alignItems: "stretch",
+            }}
+          >
+            <div
+              style={{
+                background: "#f9f9f9",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "20px 16px",
+                flex: 1,
+              }}
+            >
+              <Image
+                src="/brand/LOGOTIPO_LIGHT_GAMA_ENGINE.svg"
+                alt="GAMA Engine Logotipo Light"
+                width={810}
+                height={1012}
+                style={{ width: "100%", maxWidth: 300, height: "auto" }}
+                unoptimized
+              />
+            </div>
+            <div style={{ padding: "14px 16px", background: "var(--color-surface)", borderLeft: "1px solid var(--color-border)", display: "flex", flexDirection: "column", justifyContent: "center", minWidth: 110 }}>
+              <div style={{ fontWeight: 700, fontSize: 12, marginBottom: 2 }}>Logotipo Light</div>
+              <div style={{ fontSize: 10, color: "var(--color-text-muted)" }}>Wordmark engine</div>
+            </div>
+          </div>
+
+          <div
+            style={{
+              borderRadius: 14,
+              overflow: "hidden",
+              border: "1px solid var(--color-border)",
+              display: "flex",
+              alignItems: "stretch",
+            }}
+          >
+            <div
+              style={{
+                background: "#111111",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "20px 16px",
+                flex: 1,
+              }}
+            >
+              <Image
+                src="/brand/LOGOTIPO_DARK_GAMA_ENGINE.svg.svg"
+                alt="GAMA Engine Logotipo Dark"
+                width={810}
+                height={1012}
+                style={{ width: "100%", maxWidth: 300, height: "auto" }}
+                unoptimized
+              />
+            </div>
+            <div style={{ padding: "14px 16px", background: "var(--color-surface)", borderLeft: "1px solid var(--color-border)", display: "flex", flexDirection: "column", justifyContent: "center", minWidth: 110 }}>
+              <div style={{ fontWeight: 700, fontSize: 12, marginBottom: 2 }}>Logotipo Dark</div>
+              <div style={{ fontSize: 10, color: "var(--color-text-muted)" }}>Wordmark engine</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 04 — Brand Colors */}
+      <section style={{ marginBottom: 64 }}>
+        <SectionHeader
+          number="04"
           title="Cores de Marca"
           desc="Três variações do verde GAMA — use Primary para CTA, Light para hover, Dark para pressed."
         />
@@ -266,13 +441,7 @@ export default function IdentityPage() {
             { hex: "#6fa80a", name: "GAMA Green Dark", role: "Pressed states, shadows" },
           ].map((c) => (
             <div key={c.hex} className="glass-subtle" style={{ borderRadius: 16, overflow: "hidden" }}>
-              <div
-                style={{
-                  height: 100,
-                  backgroundColor: c.hex,
-                  position: "relative",
-                }}
-              >
+              <div style={{ height: 100, backgroundColor: c.hex, position: "relative" }}>
                 <span
                   style={{
                     position: "absolute",
@@ -290,80 +459,94 @@ export default function IdentityPage() {
               </div>
               <div style={{ padding: "14px 18px" }}>
                 <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 4 }}>{c.name}</div>
-                <div style={{ fontSize: 12, color: "var(--color-text-muted)", lineHeight: 1.4 }}>
-                  {c.role}
-                </div>
+                <div style={{ fontSize: 12, color: "var(--color-text-muted)", lineHeight: 1.4 }}>{c.role}</div>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* SECTION 03 — Brand Typography */}
+      {/* SECTION 05 — Brand Typography */}
       <section style={{ marginBottom: 64 }}>
         <SectionHeader
-          number="03"
+          number="05"
           title="Tipografia de Marca"
-          desc="Poppins Black (900) para headlines de impacto. SemiBold (600) para subtítulos. Regular (400) para corpo."
+          desc="Montserrat (wordmark, display) + Poppins (UI, corpo). Ambas em Black 900 para headlines de impacto."
         />
-        <div
-          className="glass-illuminated"
-          style={{ padding: 40, borderRadius: 24, textAlign: "center" }}
-        >
-          <div
-            style={{
-              fontSize: 80,
-              fontWeight: 900,
-              letterSpacing: -3,
-              lineHeight: 1.0,
-              marginBottom: 8,
-            }}
-          >
-            Poppins
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          <div className="glass-illuminated" style={{ padding: "32px 36px", borderRadius: 20, textAlign: "center" }}>
+            <div
+              style={{
+                fontFamily: "var(--font-display, var(--font-poppins))",
+                fontSize: 52,
+                fontWeight: 900,
+                letterSpacing: -2,
+                lineHeight: 1.0,
+                marginBottom: 6,
+              }}
+            >
+              Montserrat
+            </div>
+            <div
+              className="gradient-text"
+              style={{
+                fontFamily: "var(--font-display, var(--font-poppins))",
+                fontSize: 52,
+                fontWeight: 900,
+                letterSpacing: -2,
+                lineHeight: 1.0,
+                marginBottom: 16,
+              }}
+            >
+              Black 900
+            </div>
+            <p style={{ fontSize: 13, color: "var(--color-text-muted)", margin: "0 0 12px" }}>
+              Wordmark · Display · Hero
+            </p>
+            <p style={{ fontSize: 14, color: "var(--color-text-secondary)", margin: 0, lineHeight: 1.7 }}>
+              Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn Oo Pp Qq Rr Ss Tt Uu Vv Ww Xx Yy Zz
+            </p>
           </div>
-          <div
-            className="gradient-text"
-            style={{
-              fontSize: 80,
-              fontWeight: 900,
-              letterSpacing: -3,
-              lineHeight: 1.0,
-              marginBottom: 24,
-            }}
-          >
-            Black 900
+          <div className="glass-card" style={{ padding: "32px 36px", borderRadius: 20, textAlign: "center" }}>
+            <div
+              style={{
+                fontFamily: "var(--font-poppins)",
+                fontSize: 52,
+                fontWeight: 900,
+                letterSpacing: -2,
+                lineHeight: 1.0,
+                marginBottom: 6,
+              }}
+            >
+              Poppins
+            </div>
+            <div
+              className="gradient-text"
+              style={{
+                fontFamily: "var(--font-poppins)",
+                fontSize: 52,
+                fontWeight: 900,
+                letterSpacing: -2,
+                lineHeight: 1.0,
+                marginBottom: 16,
+              }}
+            >
+              Black 900
+            </div>
+            <p style={{ fontSize: 13, color: "var(--color-text-muted)", margin: "0 0 12px" }}>
+              UI · Componentes · Corpo
+            </p>
+            <p style={{ fontSize: 14, color: "var(--color-text-secondary)", margin: 0, lineHeight: 1.7 }}>
+              Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn Oo Pp Qq Rr Ss Tt Uu Vv Ww Xx Yy Zz
+            </p>
           </div>
-          <p
-            style={{
-              fontSize: 16,
-              color: "var(--color-text-secondary)",
-              fontWeight: 400,
-              lineHeight: 1.6,
-              maxWidth: 560,
-              margin: "0 auto",
-            }}
-          >
-            Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn Oo Pp Qq Rr Ss Tt Uu Vv Ww Xx Yy Zz
-          </p>
-          <p
-            style={{
-              fontSize: 16,
-              color: "var(--color-text-secondary)",
-              fontWeight: 400,
-              lineHeight: 1.6,
-              maxWidth: 560,
-              margin: "8px auto 0",
-            }}
-          >
-            0 1 2 3 4 5 6 7 8 9
-          </p>
         </div>
       </section>
 
-      {/* SECTION 04 — Personality */}
+      {/* SECTION 06 — Personality */}
       <section style={{ marginBottom: 32 }}>
         <SectionHeader
-          number="04"
+          number="06"
           title="Personalidade da Marca"
           desc="4 pilares que definem como a GAMA se apresenta em todas as touchpoints."
         />
@@ -395,14 +578,7 @@ export default function IdentityPage() {
               <h3 style={{ fontSize: 22, fontWeight: 900, margin: "0 0 10px", letterSpacing: -0.5 }}>
                 {t.word}
               </h3>
-              <p
-                style={{
-                  fontSize: 14,
-                  color: "var(--color-text-secondary)",
-                  margin: 0,
-                  lineHeight: 1.6,
-                }}
-              >
+              <p style={{ fontSize: 14, color: "var(--color-text-secondary)", margin: 0, lineHeight: 1.6 }}>
                 {t.desc}
               </p>
             </div>

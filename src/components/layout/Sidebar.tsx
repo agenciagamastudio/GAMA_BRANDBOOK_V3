@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useTheme } from "./ThemeProvider";
@@ -203,17 +204,19 @@ export default function Sidebar() {
               width: 36,
               height: 36,
               borderRadius: 10,
-              background: "var(--color-primary)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: 900,
-              fontSize: 16,
-              color: "#0a0a0a",
+              overflow: "hidden",
+              flexShrink: 0,
               boxShadow: "0 0 20px rgba(136,206,17,0.4)",
             }}
           >
-            G
+            <Image
+              src="/brand/gama-icon.svg"
+              alt="GAMA"
+              width={436}
+              height={436}
+              style={{ width: 36, height: 36, display: "block" }}
+              unoptimized
+            />
           </div>
           <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
             <span
