@@ -1,3 +1,4 @@
+@'
 import PageLayout from "@/components/layout/PageLayout";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc?: string }) {
@@ -46,12 +47,14 @@ export default function PageHeadersPage() {
               {["Configurações", "Equipe", "Permissões"].map((item, i) => (
                 <span key={item} style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   {i > 0 && <span style={{ color: "var(--color-text-muted)", fontSize: 12 }}>›</span>}
-                  <span style={{
-                    fontSize: 13, fontWeight: 500,
-                    color: i === 2 ? "var(--color-text)" : "var(--color-text-muted)",
-                    cursor: i < 2 ? "pointer" : "default",
-                    fontWeight: i === 2 ? 700 : 400,
-                  }}>{item}</span>
+                  <span
+                    style={{
+                      fontSize: 13,
+                      color: i === 2 ? "var(--color-text)" : "var(--color-text-muted)",
+                      cursor: i < 2 ? "pointer" : "default",
+                      fontWeight: i === 2 ? 700 : 400,
+                    }}
+                  >{item}</span>
                 </span>
               ))}
             </nav>
@@ -113,17 +116,33 @@ export default function PageHeadersPage() {
                 { label: "Organismos", count: 8 },
                 { label: "Templates", count: 10 },
               ].map((tab) => (
-                <div key={tab.label} style={{
-                  display: "flex", alignItems: "center", gap: 8,
-                  padding: "12px 20px", cursor: "pointer",
-                  borderBottom: tab.active ? "2px solid var(--color-primary)" : "2px solid transparent",
-                  marginBottom: -1,
-                  color: tab.active ? "var(--color-primary)" : "var(--color-text-muted)",
-                  fontWeight: tab.active ? 700 : 400, fontSize: 14,
-                  transition: "color 0.15s",
-                }}>
+                <div
+                  key={tab.label}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    padding: "12px 20px",
+                    cursor: "pointer",
+                    borderBottom: tab.active ? "2px solid var(--color-primary)" : "2px solid transparent",
+                    marginBottom: -1,
+                    color: tab.active ? "var(--color-primary)" : "var(--color-text-muted)",
+                    fontWeight: tab.active ? 700 : 400,
+                    fontSize: 14,
+                    transition: "color 0.15s",
+                  }}
+                >
                   {tab.label}
-                  <span style={{ fontSize: 11, padding: "2px 7px", borderRadius: 999, background: tab.active ? "var(--color-primary-dim)" : "rgba(255,255,255,0.06)", color: tab.active ? "var(--color-primary)" : "var(--color-text-muted)", fontWeight: 600 }}>
+                  <span
+                    style={{
+                      fontSize: 11,
+                      padding: "2px 7px",
+                      borderRadius: 999,
+                      background: tab.active ? "var(--color-primary-dim)" : "rgba(255,255,255,0.06)",
+                      color: tab.active ? "var(--color-primary)" : "var(--color-text-muted)",
+                      fontWeight: 600,
+                    }}
+                  >
                     {tab.count}
                   </span>
                 </div>
@@ -159,3 +178,4 @@ export default function PageHeadersPage() {
     </PageLayout>
   );
 }
+'@ | Out-File -FilePath src/app/components/organisms/page-headers/page.tsx -Encoding utf8
