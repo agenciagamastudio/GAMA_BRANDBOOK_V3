@@ -31,7 +31,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" data-theme="dark" className={`${poppins.variable} ${jetbrains.variable}`}>
+    <html lang="pt-BR" data-theme="dark" className={`${poppins.variable} ${jetbrains.variable}`} suppressHydrationWarning>
       <body>
         <ThemeProvider>
           <LanguageProvider>
