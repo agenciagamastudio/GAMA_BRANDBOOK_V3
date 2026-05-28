@@ -1,3 +1,5 @@
+"use client";
+
 import PageLayout from "@/components/layout/PageLayout";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc?: string }) {
