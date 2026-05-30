@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 
 const PILLARS = [
   {
@@ -46,6 +49,9 @@ const QUICK_LINKS = [
 ];
 
 export default function HomePage() {
+  const [metricsHoveredIdx, setMetricsHoveredIdx] = useState<number | null>(null);
+  const [pillarsHoveredIdx, setPillarsHoveredIdx] = useState<number | null>(null);
+
   return (
     <div className="page-enter" style={{ position: "relative", overflow: "hidden" }}>
       {/* Background blobs */}
@@ -56,6 +62,21 @@ export default function HomePage() {
       <div
         className="bg-blob bg-blob-2"
         style={{ width: 360, height: 360, top: 240, right: -80 }}
+      />
+
+      {/* Volumetric Lighting (God Rays) */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: "50%",
+          width: 800,
+          height: 600,
+          transform: "translateX(-50%)",
+          background: `radial-gradient(ellipse 400px 300px at center top, rgba(136, 206, 17, 0.12), transparent)`,
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
       />
 
       <div
@@ -101,7 +122,7 @@ export default function HomePage() {
           </p>
         </header>
 
-        {/* Metrics */}
+        {/* Metrics — Enhanced with Glass Material + Emissive Glow */}
         <section
           className="fade-up fade-up-4"
           style={{
@@ -116,11 +137,25 @@ export default function HomePage() {
             { v: "13+", l: "Páginas" },
             { v: "100%", l: "Tokenizado" },
             { v: "Dark + Light", l: "Modos" },
-          ].map((m) => (
+          ].map((m, idx) => (
             <div
               key={m.l}
               className="glass-card vol-light"
-              style={{ padding: "24px 20px", textAlign: "center" }}
+              onMouseEnter={() => setMetricsHoveredIdx(idx)}
+              onMouseLeave={() => setMetricsHoveredIdx(null)}
+              style={{
+                padding: "24px 20px",
+                textAlign: "center",
+                backdropFilter: `blur(var(--glass-blur))`,
+                background: `var(--glass-surface)`,
+                border: `1px solid var(--glass-border)`,
+                borderRadius: 16,
+                transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+                boxShadow: metricsHoveredIdx === idx
+                  ? "var(--glow-primary-md), var(--shadow-elevation-2)"
+                  : "var(--shadow-elevation-2)",
+                transform: metricsHoveredIdx === idx ? "translateY(-4px)" : "translateY(0)",
+              }}
             >
               <div
                 className="gradient-text"
@@ -149,7 +184,7 @@ export default function HomePage() {
           ))}
         </section>
 
-        {/* Pillars */}
+        {/* Pillars — Enhanced with Glass Material + Emissive Glow */}
         <section style={{ marginBottom: 72 }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 24px" }}>
             Pilares
@@ -166,12 +201,22 @@ export default function HomePage() {
                 key={p.title}
                 href={p.href}
                 className={`glass-illuminated liquid-edge fade-up fade-up-${i + 1}`}
+                onMouseEnter={() => setPillarsHoveredIdx(i)}
+                onMouseLeave={() => setPillarsHoveredIdx(null)}
                 style={{
                   padding: 32,
                   borderRadius: 20,
                   display: "block",
                   position: "relative",
                   overflow: "hidden",
+                  backdropFilter: `blur(var(--glass-blur))`,
+                  background: `var(--glass-surface)`,
+                  border: `1px solid var(--glass-border)`,
+                  transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+                  boxShadow: pillarsHoveredIdx === i
+                    ? "var(--glow-primary-md), var(--shadow-elevation-2)"
+                    : "var(--shadow-elevation-2)",
+                  transform: pillarsHoveredIdx === i ? "translateY(-8px)" : "translateY(0)",
                 }}
               >
                 <div
@@ -188,6 +233,8 @@ export default function HomePage() {
                     color: "var(--color-primary)",
                     marginBottom: 20,
                     fontWeight: 900,
+                    transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+                    boxShadow: pillarsHoveredIdx === i ? "var(--glow-primary-sm)" : "none",
                   }}
                 >
                   {p.icon}
