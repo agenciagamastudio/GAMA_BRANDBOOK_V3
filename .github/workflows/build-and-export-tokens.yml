@@ -1,0 +1,159 @@
+name: Build & Export Design Tokens
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'src/**'
+      - 'public/design.tokens.json'
+      - 'tailwind.config.ts'
+      - 'package.json'
+      - 'package-lock.json'
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  build-and-validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate design.tokens.json
+        run: |
+          node -e "
+            const fs = require('fs');
+            const path = 'public/design.tokens.json';
+            try {
+              const tokens = JSON.parse(fs.readFileSync(path, 'utf8'));
+              if (!tokens.metadata || !tokens.global) {
+                throw new Error('design.tokens.json missing required structure');
+              }
+              console.log('✅ design.tokens.json is valid');
+              console.log('   Version:', tokens.metadata.version);
+              console.log('   Last Modified:', tokens.metadata.lastModified);
+              console.log('   Token Categories:', Object.keys(tokens.global).length);
+            } catch (e) {
+              console.error('❌ design.tokens.json validation failed:', e.message);
+              process.exit(1);
+            }
+          "
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Build Next.js
+        run: npm run build
+
+      - name: Export design tokens metadata
+        run: |
+          node -e "
+            const fs = require('fs');
+            const tokens = JSON.parse(fs.readFileSync('public/design.tokens.json', 'utf8'));
+            const metadata = {
+              version: tokens.metadata.version,
+              lastModified: tokens.metadata.lastModified,
+              totalTokens: Object.values(tokens.global).reduce((sum, category) => {
+                return sum + Object.keys(category).length;
+              }, 0),
+              categories: Object.keys(tokens.global),
+              exportFormats: tokens.exportFormats || ['css', 'scss', 'js', 'json', 'tailwind']
+            };
+            fs.writeFileSync('.next/design-tokens-metadata.json', JSON.stringify(metadata, null, 2));
+            console.log('📦 Token metadata exported:');
+            console.log(JSON.stringify(metadata, null, 2));
+          "
+
+      - name: Upload build artifacts
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        uses: actions/upload-artifact@v4
+        with:
+          name: next-build-${{ matrix.node-version }}
+          path: |
+            .next
+            public/design.tokens.json
+          retention-days: 30
+
+      - name: Comment PR with token info
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const tokens = JSON.parse(fs.readFileSync('public/design.tokens.json', 'utf8'));
+            const totalTokens = Object.values(tokens.global).reduce((sum, category) => {
+              return sum + Object.keys(category).length;
+            }, 0);
+            const comment = `## ✅ Design Tokens Validated
+
+- **Version:** ${tokens.metadata.version}
+- **Total Tokens:** ${totalTokens}
+- **Categories:** ${Object.keys(tokens.global).join(', ')}
+- **Export Formats:** ${tokens.exportFormats?.join(', ') || 'css, scss, js, json, tailwind'}
+- **Last Modified:** ${tokens.metadata.lastModified}
+
+All design tokens are valid and exported successfully! ✨`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Create release (main branch only)
+        if: |
+          github.event_name == 'push' &&
+          (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ format('{0}-{1}', '3.0.0', github.run_number) }}
+          release_name: Design System v3.0.0 Build ${{ github.run_number }}
+          body: |
+            ## GAMA Design System V3 Release
+
+            ### Design Tokens Exported
+            - **Version:** 3.0.0
+            - **Tokens:** Check artifacts for design.tokens.json
+
+            ### Changes
+            - CSS variables mapping: ✅
+            - Tailwind configuration: ✅
+            - Glass material system: ✅
+            - Volumetric lighting: ✅
+            - Emissive glow effects: ✅
+
+            ### Files
+            - `public/design.tokens.json` — Token definitions
+            - `src/app/globals.css` — CSS custom properties
+            - `tailwind.config.ts` — Tailwind mapping
+          draft: false
+          prerelease: false
+
+      - name: Build status
+        run: |
+          echo "✅ Build completed successfully"
+          echo "📦 Design tokens exported"
+          echo "🚀 Ready for deployment"
