@@ -144,10 +144,22 @@ export default function Sidebar() {
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
   const { lang, toggleLang, t } = useLang();
-  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({
+    overview: true,
+    brand: true,
+    foundations: true,
+    components: true,
+    developer: true,
+  });
   const [isPinned, setIsPinned] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [expandedSubSections, setExpandedSubSections] = useState<Record<string, boolean>>({});
+  const [expandedSubSections, setExpandedSubSections] = useState<Record<string, boolean>>({
+    Atoms: false,
+    Molecules: false,
+    Organisms: false,
+  });
+  const [hoveredSection, setHoveredSection] = useState<string | null>(null);
+  const [hoveredSubSection, setHoveredSubSection] = useState<string | null>(null);
 
   // Load pin state from localStorage on mount
   useEffect(() => {
@@ -377,12 +389,18 @@ export default function Sidebar() {
         }}
       >
         {SECTIONS.map((section) => {
-          const isCollapsed = collapsed[section.id];
+          const isHoveringSection = hoveredSection === section.id;
+          const isCollapsed = isHoveringSection ? false : collapsed[section.id];
           const hasSubSections = section.subSections && section.subSections.length > 0;
           const hasContent = section.items.length > 0 || hasSubSections;
 
           return (
-            <div key={section.id} style={{ marginBottom: 4 }}>
+            <div
+              key={section.id}
+              style={{ marginBottom: 4 }}
+              onMouseEnter={() => isExpanded && setHoveredSection(section.id)}
+              onMouseLeave={() => setHoveredSection(null)}
+            >
               {isExpanded && (
                 <div
                   className="sidebar-section-title"
@@ -438,9 +456,15 @@ export default function Sidebar() {
 
                   {isExpanded &&
                     section.subSections?.map((sub) => {
-                      const subExpanded = expandedSubSections[sub.label] ?? true;
+                      const isHoveringSubSection = hoveredSubSection === sub.label;
+                      const subExpanded = isHoveringSubSection ? true : (expandedSubSections[sub.label] ?? false);
                       return (
-                        <div key={sub.label} style={{ marginTop: 6 }}>
+                        <div
+                          key={sub.label}
+                          style={{ marginTop: 6 }}
+                          onMouseEnter={() => setHoveredSubSection(sub.label)}
+                          onMouseLeave={() => setHoveredSubSection(null)}
+                        >
                           <div
                             onClick={() => toggleSubSection(sub.label)}
                             style={{
@@ -483,6 +507,7 @@ export default function Sidebar() {
                                   paddingLeft: 24,
                                   fontSize: 12,
                                   transition: "all 0.2s ease-out",
+                                  animation: "fadeIn 0.2s ease-out",
                                 }}
                               >
                                 {item.label}
