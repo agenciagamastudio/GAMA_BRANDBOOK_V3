@@ -48,6 +48,21 @@ const config: Config = {
         "token-border": "var(--color-border)",
         "token-border-green": "var(--color-border-green)",
       },
+      backdropBlur: {
+        sm: "var(--glass-blur-sm)",
+        DEFAULT: "var(--glass-blur)",
+        lg: "var(--glass-blur-lg)",
+        xl: "64px",
+      },
+      boxShadow: {
+        "elevation-1": "var(--shadow-elevation-1)",
+        "elevation-2": "var(--shadow-elevation-2)",
+        "elevation-3": "var(--shadow-elevation-3)",
+        contact: "var(--shadow-contact)",
+        "glow-sm": "var(--glow-primary-sm)",
+        "glow-md": "var(--glow-primary-md)",
+        "glow-lg": "var(--glow-primary-lg)",
+      },
       animation: {
         "fade-up": "fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) both",
         "pulse-green": "pulseGreen 3s ease-in-out infinite",

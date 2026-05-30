@@ -41,6 +41,48 @@
   --sp-10: 40px;
   --sp-12: 48px;
   --sp-16: 64px;
+
+  /* === DEPTH SYSTEM === */
+  --depth-layer-1: 0;
+  --depth-layer-2: 10;
+  --depth-layer-3: 20;
+  --depth-layer-4: 100;
+
+  /* === GLASS MATERIAL === */
+  --glass-blur: 24px;
+  --glass-blur-sm: 12px;
+  --glass-blur-lg: 40px;
+  --glass-opacity: 0.08;
+  --glass-border-opacity: 0.15;
+  --glass-highlight-opacity: 0.45;
+  --glass-surface: rgba(255, 255, 255, 0.08);
+  --glass-surface-hover: rgba(255, 255, 255, 0.12);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-highlight: rgba(255, 255, 255, 0.45);
+
+  /* === LIQUID GLASS (refractive) === */
+  --liquid-glass-blur: 32px;
+  --liquid-glass-opacity: 0.06;
+  --liquid-glass-distortion: 4px;
+  --liquid-glass-surface: rgba(255, 255, 255, 0.06);
+
+  /* === VOLUMETRIC LIGHTING === */
+  --vol-light-opacity: 0.12;
+  --vol-light-color: rgba(136, 206, 17, 0.12);
+  --vol-light-spread: 120px;
+
+  /* === VOLUMETRIC SHADOWS (Ambient Occlusion) === */
+  --shadow-elevation-1: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-elevation-2: 0 8px 24px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-elevation-3: 0 16px 48px rgba(0, 0, 0, 0.7), 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-contact: 0 1px 3px rgba(0, 0, 0, 0.6);
+
+  /* === EMISSIVE GLOW (Bloom) === */
+  --glow-primary-sm: 0 0 8px rgba(136, 206, 17, 0.3);
+  --glow-primary-md: 0 0 20px rgba(136, 206, 17, 0.4), 0 0 40px rgba(136, 206, 17, 0.15);
+  --glow-primary-lg: 0 0 40px rgba(136, 206, 17, 0.5), 0 0 80px rgba(136, 206, 17, 0.2);
+  --glow-white-sm: 0 0 8px rgba(255, 255, 255, 0.2);
+  --glow-white-md: 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
 [data-theme="dark"] {
