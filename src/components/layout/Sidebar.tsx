@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTheme } from "./ThemeProvider";
 import { useLang } from "./LanguageProvider";
 
@@ -131,32 +131,74 @@ function ChevronIcon() {
     </svg>
   );
 }
+function PinIcon({ filled = false }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 17v5M9 2h6v7H9z" />
+      <circle cx="12" cy="9" r="2" />
+    </svg>
+  );
+}
 
 export default function Sidebar() {
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
   const { lang, toggleLang, t } = useLang();
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+  const [isPinned, setIsPinned] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [expandedSubSections, setExpandedSubSections] = useState<Record<string, boolean>>({});
+
+  // Load pin state from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem("sidebar-pinned");
+    if (saved) setIsPinned(JSON.parse(saved));
+  }, []);
+
+  // Persist pin state to localStorage
+  useEffect(() => {
+    localStorage.setItem("sidebar-pinned", JSON.stringify(isPinned));
+  }, [isPinned]);
+
+  // Auto-expand subsections when hovered
+  useEffect(() => {
+    if (isHovered) {
+      // Expand the COMPONENTS section automatically on hover
+      setCollapsed((prev) => ({ ...prev, components: false }));
+    }
+  }, [isHovered]);
 
   const toggleCollapse = (id: string) =>
     setCollapsed((prev) => ({ ...prev, [id]: !prev[id] }));
+
+  const togglePin = () => setIsPinned(!isPinned);
+
+  const toggleSubSection = (label: string) =>
+    setExpandedSubSections((prev) => ({ ...prev, [label]: !prev[label] }));
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
     return pathname === href || pathname.startsWith(href + "/");
   };
 
+  const isExpanded = isPinned || isHovered;
+  const sidebarWidth = isExpanded ? 260 : 80;
+
   return (
     <aside
       className="sidebar-glass flex-shrink-0"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       style={{
-        width: 260,
+        width: sidebarWidth,
         height: "100vh",
         display: "flex",
         flexDirection: "column",
         position: "sticky",
         top: 0,
         zIndex: 40,
+        transition: "width 0.3s ease-out, background 0.3s ease-out",
+        overflow: "hidden",
       }}
     >
       {/* Header / Brand */}
@@ -167,112 +209,141 @@ export default function Sidebar() {
           display: "flex",
           flexDirection: "column",
           gap: 14,
+          whiteSpace: "nowrap",
+          transition: "opacity 0.3s ease-out",
         }}
       >
-        <Link
-          href="/"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            textDecoration: "none",
-          }}
-        >
-          <div
-            className="animate-pulse-green"
+        {/* Top bar: Logo + Pin button */}
+        <div style={{ display: "flex", alignItems: "center", gap: 10, justifyContent: "space-between" }}>
+          <Link
+            href="/"
             style={{
-              width: 36,
-              height: 36,
-              borderRadius: 10,
-              overflow: "hidden",
-              flexShrink: 0,
-              boxShadow: "0 0 20px rgba(136,206,17,0.4)",
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              textDecoration: "none",
+              opacity: isExpanded ? 1 : 0.7,
             }}
           >
-            <Image
-              src="/brand/gama-icon.svg"
-              alt="GAMA"
-              width={436}
-              height={436}
-              style={{ width: 36, height: 36, display: "block" }}
-              unoptimized
+            <div
+              className="animate-pulse-green"
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 10,
+                overflow: "hidden",
+                flexShrink: 0,
+                boxShadow: "0 0 20px rgba(136,206,17,0.4)",
+              }}
+            >
+              <Image
+                src="/brand/gama-icon.svg"
+                alt="GAMA"
+                width={436}
+                height={436}
+                style={{ width: 36, height: 36, display: "block" }}
+                unoptimized
+              />
+            </div>
+            {isExpanded && (
+              <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
+                <span
+                  style={{
+                    fontWeight: 800,
+                    fontSize: 14,
+                    letterSpacing: 0.5,
+                    color: "var(--color-text)",
+                  }}
+                >
+                  GAMA DS
+                </span>
+                <span
+                  className="pill pill-green"
+                  style={{
+                    marginTop: 4,
+                    padding: "1px 6px",
+                    fontSize: 9,
+                    alignSelf: "flex-start",
+                  }}
+                >
+                  V3.0
+                </span>
+              </div>
+            )}
+          </Link>
+
+          {/* Pin button - always visible */}
+          <button
+            onClick={togglePin}
+            className="btn btn-ghost btn-sm"
+            style={{
+              padding: "6px 8px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+            aria-label={isPinned ? "Desafixar sidebar" : "Afixar sidebar"}
+            title={isPinned ? "Sidebar fixada" : "Afixar sidebar"}
+          >
+            <PinIcon filled={isPinned} />
+          </button>
+        </div>
+
+        {/* Theme + Lang toggle - only visible when expanded */}
+        {isExpanded && (
+          <div style={{ display: "flex", gap: 6 }}>
+            <button
+              onClick={toggleTheme}
+              className="btn btn-ghost btn-sm"
+              style={{ flex: 1, padding: "6px 8px" }}
+              aria-label="Toggle theme"
+              title={theme === "dark" ? "Modo escuro" : "Modo claro"}
+            >
+              {theme === "dark" ? <MoonIcon /> : <SunIcon />}
+              <span style={{ fontSize: 11 }}>{theme === "dark" ? "Dark" : "Light"}</span>
+            </button>
+            <button
+              onClick={toggleLang}
+              className="btn btn-ghost btn-sm"
+              style={{ flex: 1, padding: "6px 8px", fontSize: 11 }}
+              aria-label="Toggle language"
+            >
+              {lang === "pt" ? "PT | en" : "pt | EN"}
+            </button>
+          </div>
+        )}
+
+        {/* Search - only visible when expanded */}
+        {isExpanded && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "8px 12px",
+              background: "var(--glass-bg-2)",
+              border: "1px solid var(--color-border)",
+              borderRadius: 10,
+              color: "var(--color-text-muted)",
+            }}
+          >
+            <SearchIcon />
+            <input
+              type="text"
+              placeholder={t("search")}
+              style={{
+                background: "transparent",
+                border: "none",
+                outline: "none",
+                color: "var(--color-text)",
+                fontSize: 12,
+                flex: 1,
+                fontFamily: "inherit",
+              }}
             />
           </div>
-          <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
-            <span
-              style={{
-                fontWeight: 800,
-                fontSize: 14,
-                letterSpacing: 0.5,
-                color: "var(--color-text)",
-              }}
-            >
-              GAMA DS
-            </span>
-            <span
-              className="pill pill-green"
-              style={{
-                marginTop: 4,
-                padding: "1px 6px",
-                fontSize: 9,
-                alignSelf: "flex-start",
-              }}
-            >
-              V3.0
-            </span>
-          </div>
-        </Link>
-
-        {/* Theme + Lang toggle */}
-        <div style={{ display: "flex", gap: 6 }}>
-          <button
-            onClick={toggleTheme}
-            className="btn btn-ghost btn-sm"
-            style={{ flex: 1, padding: "6px 8px" }}
-            aria-label="Toggle theme"
-            title={theme === "dark" ? "Modo escuro" : "Modo claro"}
-          >
-            {theme === "dark" ? <MoonIcon /> : <SunIcon />}
-            <span style={{ fontSize: 11 }}>{theme === "dark" ? "Dark" : "Light"}</span>
-          </button>
-          <button
-            onClick={toggleLang}
-            className="btn btn-ghost btn-sm"
-            style={{ flex: 1, padding: "6px 8px", fontSize: 11 }}
-            aria-label="Toggle language"
-          >
-            {lang === "pt" ? "PT | en" : "pt | EN"}
-          </button>
-        </div>
-
-        {/* Search */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            padding: "8px 12px",
-            background: "var(--glass-bg-2)",
-            border: "1px solid var(--color-border)",
-            borderRadius: 10,
-            color: "var(--color-text-muted)",
-          }}
-        >
-          <SearchIcon />
-          <input
-            type="text"
-            placeholder={t("search")}
-            style={{
-              background: "transparent",
-              border: "none",
-              outline: "none",
-              color: "var(--color-text)",
-              fontSize: 12,
-              flex: 1,
-              fontFamily: "inherit",
-            }}
-          />
-        </div>
+        )}
       </div>
 
       {/* Nav */}
@@ -280,6 +351,7 @@ export default function Sidebar() {
         style={{
           flex: 1,
           overflowY: "auto",
+          overflowX: "hidden",
           padding: "8px 12px 24px",
         }}
       >
@@ -287,17 +359,20 @@ export default function Sidebar() {
           const isCollapsed = collapsed[section.id];
           return (
             <div key={section.id} style={{ marginBottom: 4 }}>
-              <div
-                className="sidebar-section-title"
-                onClick={() => toggleCollapse(section.id)}
-              >
-                <span>{section.title}</span>
-                <span
-                  className={`sidebar-chevron ${isCollapsed ? "collapsed" : ""}`}
+              {isExpanded && (
+                <div
+                  className="sidebar-section-title"
+                  onClick={() => toggleCollapse(section.id)}
+                  style={{ cursor: "pointer" }}
                 >
-                  <ChevronIcon />
-                </span>
-              </div>
+                  <span>{section.title}</span>
+                  <span
+                    className={`sidebar-chevron ${isCollapsed ? "collapsed" : ""}`}
+                  >
+                    <ChevronIcon />
+                  </span>
+                </div>
+              )}
 
               {!isCollapsed && (
                 <div>
@@ -306,37 +381,63 @@ export default function Sidebar() {
                       key={item.href}
                       href={item.href}
                       className={`sidebar-link ${isActive(item.href) ? "active" : ""}`}
+                      title={!isExpanded ? item.label : undefined}
+                      style={{
+                        opacity: isExpanded ? 1 : 0.6,
+                        minWidth: 0,
+                      }}
                     >
-                      {item.label}
+                      {isExpanded ? item.label : item.label.substring(0, 1)}
                     </Link>
                   ))}
 
-                  {section.subSections?.map((sub) => (
-                    <div key={sub.label} style={{ marginTop: 8 }}>
-                      <div
-                        style={{
-                          padding: "6px 12px",
-                          fontSize: 10,
-                          fontWeight: 700,
-                          color: "var(--color-text-muted)",
-                          letterSpacing: 0.08,
-                          textTransform: "uppercase",
-                        }}
-                      >
-                        {sub.label}
-                      </div>
-                      {sub.items.map((item) => (
-                        <Link
-                          key={item.href}
-                          href={item.href}
-                          className={`sidebar-link ${isActive(item.href) ? "active" : ""}`}
-                          style={{ paddingLeft: 18 }}
-                        >
-                          {item.label}
-                        </Link>
-                      ))}
-                    </div>
-                  ))}
+                  {isExpanded &&
+                    section.subSections?.map((sub) => {
+                      const subExpanded = expandedSubSections[sub.label] ?? !isHovered;
+                      return (
+                        <div key={sub.label} style={{ marginTop: 8 }}>
+                          <div
+                            onClick={() => toggleSubSection(sub.label)}
+                            style={{
+                              padding: "6px 12px",
+                              fontSize: 10,
+                              fontWeight: 700,
+                              color: "var(--color-text-muted)",
+                              letterSpacing: 0.08,
+                              textTransform: "uppercase",
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 6,
+                              userSelect: "none",
+                            }}
+                          >
+                            <span style={{ flex: 1 }}>{sub.label}</span>
+                            <span
+                              style={{
+                                transform: subExpanded ? "rotate(0)" : "rotate(-90deg)",
+                                transition: "transform 0.2s ease-out",
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                            >
+                              <ChevronIcon />
+                            </span>
+                          </div>
+                          {subExpanded &&
+                            sub.items.map((item) => (
+                              <Link
+                                key={item.href}
+                                href={item.href}
+                                className={`sidebar-link ${isActive(item.href) ? "active" : ""}`}
+                                style={{ paddingLeft: 18 }}
+                              >
+                                {item.label}
+                              </Link>
+                            ))}
+                        </div>
+                      );
+                    })}
                 </div>
               )}
             </div>
@@ -344,23 +445,25 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Footer */}
-      <div
-        style={{
-          padding: "12px 16px",
-          borderTop: "1px solid var(--color-border)",
-          fontSize: 10,
-          color: "var(--color-text-muted)",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <span>GAMA DS V3.0</span>
-        <span className="pill pill-green" style={{ padding: "1px 6px", fontSize: 9 }}>
-          STABLE
-        </span>
-      </div>
+      {/* Footer - only visible when expanded */}
+      {isExpanded && (
+        <div
+          style={{
+            padding: "12px 16px",
+            borderTop: "1px solid var(--color-border)",
+            fontSize: 10,
+            color: "var(--color-text-muted)",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <span>GAMA DS V3.0</span>
+          <span className="pill pill-green" style={{ padding: "1px 6px", fontSize: 9 }}>
+            STABLE
+          </span>
+        </div>
+      )}
     </aside>
   );
 }
