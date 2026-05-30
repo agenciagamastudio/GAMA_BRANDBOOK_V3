@@ -1,0 +1,225 @@
+{
+  "$schema": "https://tokens.studio/schema.json",
+  "metadata": {
+    "name": "GAMA Design System V3",
+    "description": "Complete visual effects token system for GAMA Design System V3",
+    "version": "3.0.0",
+    "lastModified": "2026-05-30",
+    "maintainer": "GAMA Design Team",
+    "repository": "https://github.com/agenciagamastudio/GAMA_BRANDBOOK_V3"
+  },
+  "global": {
+    "color": {
+      "primary": {
+        "value": "#88CE11",
+        "description": "Primary brand color (Neon Green)"
+      },
+      "primary-dim": {
+        "value": "rgba(136, 206, 17, 0.1)",
+        "description": "Dimmed primary for backgrounds"
+      },
+      "bg": {
+        "value": "#161616",
+        "description": "Main background color"
+      },
+      "text": {
+        "value": "#ffffff",
+        "description": "Primary text color"
+      },
+      "text-secondary": {
+        "value": "#a0a0a0",
+        "description": "Secondary text color"
+      },
+      "text-muted": {
+        "value": "#6a686a",
+        "description": "Muted text color"
+      },
+      "border": {
+        "value": "rgba(255, 255, 255, 0.1)",
+        "description": "Default border color"
+      },
+      "border-green": {
+        "value": "rgba(136, 206, 17, 0.3)",
+        "description": "Green accent border"
+      }
+    },
+    "depth": {
+      "layer-1": {
+        "value": "0",
+        "description": "Base z-index layer"
+      },
+      "layer-2": {
+        "value": "10",
+        "description": "Elevated content"
+      },
+      "layer-3": {
+        "value": "20",
+        "description": "Modals and overlays"
+      },
+      "layer-4": {
+        "value": "100",
+        "description": "Topmost layer"
+      }
+    },
+    "glass": {
+      "blur": {
+        "value": "24px",
+        "description": "Standard glass blur effect"
+      },
+      "blur-sm": {
+        "value": "12px",
+        "description": "Small glass blur"
+      },
+      "blur-lg": {
+        "value": "40px",
+        "description": "Large glass blur"
+      },
+      "opacity": {
+        "value": "0.08",
+        "description": "Glass surface opacity"
+      },
+      "border-opacity": {
+        "value": "0.15",
+        "description": "Glass border opacity"
+      },
+      "highlight-opacity": {
+        "value": "0.45",
+        "description": "Glass highlight opacity"
+      },
+      "surface": {
+        "value": "rgba(255, 255, 255, 0.08)",
+        "description": "Frosted glass surface color"
+      },
+      "surface-hover": {
+        "value": "rgba(255, 255, 255, 0.12)",
+        "description": "Glass surface on hover"
+      },
+      "border": {
+        "value": "rgba(255, 255, 255, 0.15)",
+        "description": "Glass border color"
+      },
+      "highlight": {
+        "value": "rgba(255, 255, 255, 0.45)",
+        "description": "Glass highlight for depth"
+      }
+    },
+    "liquid-glass": {
+      "blur": {
+        "value": "32px",
+        "description": "Liquid glass blur (refractive)"
+      },
+      "opacity": {
+        "value": "0.06",
+        "description": "Liquid glass opacity"
+      },
+      "distortion": {
+        "value": "4px",
+        "description": "Distortion amount"
+      },
+      "surface": {
+        "value": "rgba(255, 255, 255, 0.06)",
+        "description": "Liquid glass surface"
+      }
+    },
+    "volumetric": {
+      "light-opacity": {
+        "value": "0.12",
+        "description": "Volumetric lighting opacity"
+      },
+      "light-color": {
+        "value": "rgba(136, 206, 17, 0.12)",
+        "description": "Volumetric lighting color (god rays)"
+      },
+      "light-spread": {
+        "value": "120px",
+        "description": "Volumetric light spread radius"
+      },
+      "shadow-1": {
+        "value": "0 2px 8px rgba(0, 0, 0, 0.3)",
+        "description": "Elevation shadow level 1"
+      },
+      "shadow-2": {
+        "value": "0 8px 24px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3)",
+        "description": "Elevation shadow level 2 (dual layer)"
+      },
+      "shadow-3": {
+        "value": "0 16px 48px rgba(0, 0, 0, 0.7), 0 8px 24px rgba(0, 0, 0, 0.5)",
+        "description": "Elevation shadow level 3 (triple layer)"
+      },
+      "shadow-contact": {
+        "value": "0 1px 3px rgba(0, 0, 0, 0.6)",
+        "description": "Contact shadow (ground)"
+      }
+    },
+    "glow": {
+      "primary-sm": {
+        "value": "0 0 8px rgba(136, 206, 17, 0.3)",
+        "description": "Small emissive glow"
+      },
+      "primary-md": {
+        "value": "0 0 20px rgba(136, 206, 17, 0.4), 0 0 40px rgba(136, 206, 17, 0.15)",
+        "description": "Medium emissive glow (dual layer bloom)"
+      },
+      "primary-lg": {
+        "value": "0 0 40px rgba(136, 206, 17, 0.5), 0 0 80px rgba(136, 206, 17, 0.2)",
+        "description": "Large emissive glow (triple layer bloom)"
+      },
+      "white-sm": {
+        "value": "0 0 8px rgba(255, 255, 255, 0.2)",
+        "description": "White glow small"
+      },
+      "white-md": {
+        "value": "0 0 20px rgba(255, 255, 255, 0.3)",
+        "description": "White glow medium"
+      }
+    },
+    "motion": {
+      "easing-cinematic": {
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "description": "Cinematic easing (snappy, bouncy)"
+      },
+      "duration-fast": {
+        "value": "150ms",
+        "description": "Fast animation"
+      },
+      "duration-normal": {
+        "value": "300ms",
+        "description": "Standard animation"
+      },
+      "duration-slow": {
+        "value": "500ms",
+        "description": "Slow animation"
+      }
+    }
+  },
+  "sets": {
+    "light": {
+      "description": "Light mode token overrides"
+    },
+    "dark": {
+      "description": "Dark mode token overrides (default)"
+    }
+  },
+  "exportFormats": [
+    "css",
+    "scss",
+    "js",
+    "json",
+    "tailwind"
+  ],
+  "category": {
+    "color": "Color palette",
+    "glass": "Glass material effects",
+    "volumetric": "Volumetric lighting & shadows",
+    "glow": "Emissive bloom effects",
+    "depth": "Z-index & layering system",
+    "motion": "Animation easing & durations"
+  },
+  "documentation": {
+    "brand": "https://gama-ds-platform.vercel.app/brand/identity",
+    "foundations": "https://gama-ds-platform.vercel.app/foundations/colors",
+    "components": "https://gama-ds-platform.vercel.app/components/atoms/buttons",
+    "effects": "https://gama-ds-platform.vercel.app/foundations/effects",
+    "tokens": "https://gama-ds-platform.vercel.app/tokens"
+  }
+}

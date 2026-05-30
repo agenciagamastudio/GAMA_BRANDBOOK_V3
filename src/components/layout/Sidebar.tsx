@@ -93,30 +93,10 @@ const SECTIONS: NavSection[] = [
     ],
   },
   {
-    id: "templates",
-    title: "TEMPLATES",
-    items: [
-      { label: "Overview", href: "/templates" },
-      { label: "Social Agency", href: "/templates/social-agency" },
-      { label: "Medical Clinic", href: "/templates/medical-clinic" },
-      { label: "Landing Page", href: "/templates/landing-page" },
-      { label: "Dashboard", href: "/templates/dashboard" },
-    ],
-  },
-  {
-    id: "showcase",
-    title: "SHOWCASE",
-    items: [
-      { label: "Showcase", href: "/showcase" },
-      { label: "Aplicações", href: "/showcase/applications" },
-    ],
-  },
-  {
     id: "developer",
     title: "DEVELOPER",
     items: [
       { label: "Tokens", href: "/tokens" },
-      { label: "Settings", href: "/settings" },
     ],
   },
 ];
