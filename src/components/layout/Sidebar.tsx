@@ -168,13 +168,34 @@ export default function Sidebar() {
     }
   }, [isHovered]);
 
-  const toggleCollapse = (id: string) =>
-    setCollapsed((prev) => ({ ...prev, [id]: !prev[id] }));
+  // Inteligent toggle: expand section and auto-expand all subsections
+  const toggleCollapse = (id: string) => {
+    setCollapsed((prev) => {
+      const newCollapsed = { ...prev, [id]: !prev[id] };
+
+      // Se está expandindo a seção, auto-expand todas as subsections também
+      if (!newCollapsed[id]) {
+        const section = SECTIONS.find(s => s.id === id);
+        if (section?.subSections) {
+          section.subSections.forEach(sub => {
+            setExpandedSubSections((prevSub) => ({ ...prevSub, [sub.label]: true }));
+          });
+        }
+      }
+
+      return newCollapsed;
+    });
+  };
 
   const togglePin = () => setIsPinned(!isPinned);
 
-  const toggleSubSection = (label: string) =>
-    setExpandedSubSections((prev) => ({ ...prev, [label]: !prev[label] }));
+  // Smart toggle for subsections: when parent is open, toggle subsection
+  const toggleSubSection = (label: string) => {
+    setExpandedSubSections((prev) => {
+      const newExpanded = { ...prev, [label]: !prev[label] };
+      return newExpanded;
+    });
+  };
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
@@ -357,25 +378,48 @@ export default function Sidebar() {
       >
         {SECTIONS.map((section) => {
           const isCollapsed = collapsed[section.id];
+          const hasSubSections = section.subSections && section.subSections.length > 0;
+          const hasContent = section.items.length > 0 || hasSubSections;
+
           return (
             <div key={section.id} style={{ marginBottom: 4 }}>
               {isExpanded && (
                 <div
                   className="sidebar-section-title"
-                  onClick={() => toggleCollapse(section.id)}
-                  style={{ cursor: "pointer" }}
+                  onClick={() => hasContent && toggleCollapse(section.id)}
+                  style={{
+                    cursor: hasContent ? "pointer" : "default",
+                    opacity: hasContent ? 1 : 0.5,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    padding: "8px 12px",
+                    borderRadius: 6,
+                    transition: "background 0.2s ease-out",
+                    backgroundColor: isCollapsed ? "transparent" : "rgba(255,255,255,0.04)",
+                  }}
                 >
-                  <span>{section.title}</span>
-                  <span
-                    className={`sidebar-chevron ${isCollapsed ? "collapsed" : ""}`}
-                  >
-                    <ChevronIcon />
+                  <span style={{ flex: 1, fontSize: 11, fontWeight: 700, letterSpacing: 0.5 }}>
+                    {section.title}
                   </span>
+                  {hasContent && (
+                    <span
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        transform: isCollapsed ? "rotate(-90deg)" : "rotate(0deg)",
+                        transition: "transform 0.2s ease-out",
+                        color: "var(--color-text-muted)",
+                      }}
+                    >
+                      <ChevronIcon />
+                    </span>
+                  )}
                 </div>
               )}
 
               {!isCollapsed && (
-                <div>
+                <div style={{ marginTop: 2 }}>
                   {section.items.map((item) => (
                     <Link
                       key={item.href}
@@ -385,6 +429,7 @@ export default function Sidebar() {
                       style={{
                         opacity: isExpanded ? 1 : 0.6,
                         minWidth: 0,
+                        paddingLeft: isExpanded ? 12 : 8,
                       }}
                     >
                       {isExpanded ? item.label : item.label.substring(0, 1)}
@@ -393,9 +438,9 @@ export default function Sidebar() {
 
                   {isExpanded &&
                     section.subSections?.map((sub) => {
-                      const subExpanded = expandedSubSections[sub.label] ?? !isHovered;
+                      const subExpanded = expandedSubSections[sub.label] ?? true;
                       return (
-                        <div key={sub.label} style={{ marginTop: 8 }}>
+                        <div key={sub.label} style={{ marginTop: 6 }}>
                           <div
                             onClick={() => toggleSubSection(sub.label)}
                             style={{
@@ -410,6 +455,9 @@ export default function Sidebar() {
                               alignItems: "center",
                               gap: 6,
                               userSelect: "none",
+                              borderRadius: 4,
+                              transition: "background 0.2s ease-out",
+                              backgroundColor: subExpanded ? "rgba(136,206,17,0.08)" : "transparent",
                             }}
                           >
                             <span style={{ flex: 1 }}>{sub.label}</span>
@@ -419,6 +467,7 @@ export default function Sidebar() {
                                 transition: "transform 0.2s ease-out",
                                 display: "flex",
                                 alignItems: "center",
+                                color: "var(--color-text-muted)",
                               }}
                             >
                               <ChevronIcon />
@@ -430,7 +479,11 @@ export default function Sidebar() {
                                 key={item.href}
                                 href={item.href}
                                 className={`sidebar-link ${isActive(item.href) ? "active" : ""}`}
-                                style={{ paddingLeft: 18 }}
+                                style={{
+                                  paddingLeft: 24,
+                                  fontSize: 12,
+                                  transition: "all 0.2s ease-out",
+                                }}
                               >
                                 {item.label}
                               </Link>
