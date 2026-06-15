@@ -1,0 +1,38 @@
+{
+  "name": "@gama/design-tokens",
+  "version": "1.0.0",
+  "description": "GAMA Design System V3 - Tokenized design system for all GAMA_ projects",
+  "license": "MIT",
+  "main": "dist/design-tokens.css",
+  "exports": {
+    "./css": "./dist/design-tokens.css",
+    "./tailwind": "./dist/tailwind-tokens.js",
+    "./tokens": "./dist/design.tokens.json",
+    "./tokens.d.ts": "./dist/tokens.d.ts"
+  },
+  "scripts": {
+    "build": "node build.js",
+    "build:watch": "node build.js --watch"
+  },
+  "devDependencies": {
+    "style-dictionary": "^4.0.0"
+  },
+  "files": [
+    "dist/",
+    "npm-dist/",
+    "tokens.json",
+    "README.md"
+  ],
+  "keywords": [
+    "design-tokens",
+    "design-system",
+    "css-variables",
+    "tailwind",
+    "gama",
+    "tokens-studio"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/agenciagamastudio/GAMA_BRANDBOOK_V3"
+  }
+}

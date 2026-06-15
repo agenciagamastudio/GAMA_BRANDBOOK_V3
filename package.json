@@ -4,11 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node scripts/export-tokens.js",
+    "build": "npm run tokens:build && next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "export-tokens": "node scripts/export-tokens.js"
+    "tokens:build": "cd design-tokens && node build.js",
+    "tokens:watch": "cd design-tokens && node build.js --watch",
+    "export-tokens": "npm run tokens:build"
   },
   "dependencies": {
     "next": "^15.0.3",
@@ -21,6 +23,7 @@
     "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
+    "style-dictionary": "^4.4.0",
     "tailwindcss": "^3.4.15",
     "typescript": "^5.6.3"
   }

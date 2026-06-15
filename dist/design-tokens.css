@@ -1,0 +1,60 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-primary-dim: rgba(136, 206, 17, 0.15); /** Primary with 15% opacity */
+  --color-primary-glow: rgba(136, 206, 17, 0.35); /** Primary with 35% opacity for glow */
+  --color-functional-success: #10b981; /** Success state color */
+  --color-functional-warning: #f59e0b; /** Warning state color */
+  --color-functional-error: #e11d48; /** Error state color */
+  --color-functional-info: #3b82f6; /** Info state color */
+  --color-background-dark: #161616; /** Dark background */
+  --color-background-surface: #272727; /** Surface color */
+  --color-background-surface2: #1f1f1f; /** Secondary surface */
+  --color-background-surface3: #303030; /** Tertiary surface */
+  --color-text-primary: #ffffff; /** Primary text color */
+  --color-text-secondary: rgba(255, 255, 255, 0.7); /** Secondary text color */
+  --color-border-default: rgba(255, 255, 255, 0.1); /** Default border color */
+  --color-border-green: rgba(136, 206, 17, 0.25); /** Green border accent */
+  --typography-font-main: 'Poppins', sans-serif; /** Main font family */
+  --typography-font-mono: 'JetBrains Mono', monospace; /** Monospace font family */
+  --radius-sm: 6px; /** Small border radius */
+  --radius-md: 12px; /** Medium border radius */
+  --radius-lg: 16px; /** Large border radius */
+  --radius-xl: 24px; /** Extra large border radius */
+  --spacing-1: 4px; /** 4px spacing unit */
+  --spacing-2: 8px; /** 8px spacing unit */
+  --spacing-3: 12px; /** 12px spacing unit */
+  --spacing-4: 16px; /** 16px spacing unit */
+  --spacing-5: 20px; /** 20px spacing unit */
+  --spacing-6: 24px; /** 24px spacing unit */
+  --spacing-8: 32px; /** 32px spacing unit */
+  --spacing-10: 40px; /** 40px spacing unit */
+  --spacing-12: 48px; /** 48px spacing unit */
+  --spacing-16: 64px; /** 64px spacing unit */
+  --glass-blur: 24px; /** Glass blur effect strength */
+  --glass-blur-sm: 12px; /** Small glass blur */
+  --glass-blur-lg: 40px; /** Large glass blur */
+  --glass-opacity: 0.08; /** Glass surface opacity */
+  --glass-surface: rgba(255, 255, 255, 0.08); /** Glass surface color */
+  --glass-surface-hover: rgba(255, 255, 255, 0.12); /** Glass surface on hover */
+  --glass-border: rgba(255, 255, 255, 0.15); /** Glass border color */
+  --glass-highlight: rgba(255, 255, 255, 0.45); /** Glass highlight color */
+  --volumetric-light-opacity: 0.12; /** Volumetric light opacity */
+  --volumetric-light-color: rgba(136, 206, 17, 0.12); /** Volumetric light color (god rays) */
+  --volumetric-light-spread: 120px; /** Volumetric light spread */
+  --shadow-elevation1: 0 2px 8px rgba(0, 0, 0, 0.3); /** Elevation level 1 */
+  --shadow-elevation2: 0 8px 24px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3); /** Elevation level 2 */
+  --shadow-elevation3: 0 16px 48px rgba(0, 0, 0, 0.7), 0 8px 24px rgba(0, 0, 0, 0.5); /** Elevation level 3 */
+  --shadow-contact: 0 1px 3px rgba(0, 0, 0, 0.6); /** Contact shadow */
+  --glow-primary-sm: 0 0 8px rgba(136, 206, 17, 0.3); /** Small primary glow */
+  --glow-primary-md: 0 0 20px rgba(136, 206, 17, 0.4), 0 0 40px rgba(136, 206, 17, 0.15); /** Medium primary glow */
+  --glow-primary-lg: 0 0 40px rgba(136, 206, 17, 0.5), 0 0 80px rgba(136, 206, 17, 0.2); /** Large primary glow */
+  --glow-white-sm: 0 0 8px rgba(255, 255, 255, 0.2); /** Small white glow */
+  --glow-white-md: 0 0 20px rgba(255, 255, 255, 0.3); /** Medium white glow */
+  --motion-easing-cinematic: cubic-bezier(0.16, 1, 0.3, 1); /** Cinematic easing (snappy, slightly bouncy) */
+  --motion-duration-fast: 150ms; /** Fast animation duration */
+  --motion-duration-normal: 300ms; /** Normal animation duration */
+  --motion-duration-slow: 500ms; /** Slow animation duration */
+}
