@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <title>GAMA Macros</title>
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎬 GAMA Macros</h1>
+      <div class="header-btns">
+        <button id="btnDiag" class="btn-mini" title="Gerar relatório técnico (diag.txt) — usar só se algo der errado">🔍</button>
+        <button id="btnRefresh" class="btn-mini" title="Atualizar a contagem de clipes e seleção">↻</button>
+      </div>
+    </header>
+
+    <div id="seqInfo" class="seq-info">Carregando…</div>
+
+    <div id="progressRow" class="progress-row hidden">
+      <div class="progress-track">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+      <span id="progressText" class="progress-text">0/0</span>
+      <button id="btnCancel" class="btn-cancel">✖ Cancelar</button>
+    </div>
+
+    <section class="section">
+      <h2>📐 Ajustar ao tamanho do quadro</h2>
+      <p class="desc">
+        Redimensiona o vídeo pra caber certinho na tela.
+        É o mesmo que botão direito → "Escala para o tamanho do quadro" —
+        só que sem travar o Premiere.
+      </p>
+      <button id="btnScaleSelected" class="btn btn-primary">
+        ▶ Só nos clipes SELECIONADOS
+        <span class="sub">selecione na timeline (Ctrl+A pega todos) e clique aqui</span>
+      </button>
+      <button id="btnScaleAll" class="btn btn-warning">
+        ▶ Em TODOS os clipes da sequência
+        <span class="sub">não precisa selecionar nada — pede confirmação com 2º clique</span>
+      </button>
+    </section>
+
+    <section class="section">
+      <h2>🔢 Escala manual (%)</h2>
+      <p class="desc">
+        Aplica o mesmo tamanho em todos os clipes selecionados.
+        Ex.: 50 = metade &nbsp;•&nbsp; 100 = original &nbsp;•&nbsp; 200 = dobro.
+      </p>
+      <div class="custom-row">
+        <input id="scaleValue" type="number" min="1" max="10000" step="1" value="100"/>
+        <span class="pct">%</span>
+        <button id="btnApplyScale" class="btn btn-secondary btn-inline">Aplicar nos selecionados</button>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>✂️ Remover silêncios</h2>
+      <p class="desc">
+        Escuta o áudio dos clipes selecionados (via FFmpeg), encontra as partes mudas
+        e corta fora fechando os buracos — o vídeo encurta. Primeiro analise, depois corte.
+      </p>
+      <div class="settings-grid">
+        <label title="Abaixo deste volume conta como silêncio. -40 é um bom começo; -35 pega mais coisa.">
+          Limiar <input id="silDb" type="number" value="-40" step="1" max="0"/> dB
+        </label>
+        <label title="Silêncios mais curtos que isso são ignorados (respiros normais da fala).">
+          Mín. <input id="silDur" type="number" value="0.8" step="0.1" min="0.1"/> s
+        </label>
+        <label title="Respiro que fica antes e depois de cada corte, pra fala não começar 'seca'.">
+          Margem <input id="silPad" type="number" value="0.1" step="0.05" min="0"/> s
+        </label>
+      </div>
+
+      <div id="silPreview" class="sil-preview hidden">
+        <div id="silPreviewBar" class="sil-preview-bar"></div>
+        <div id="silPreviewStats" class="sil-preview-stats">—</div>
+        <div class="sil-preview-legend">
+          <span><i class="sil-dot sil-dot-keep"></i> fica</span>
+          <span><i class="sil-dot sil-dot-cut"></i> corta</span>
+        </div>
+      </div>
+
+      <button id="btnAnalyzeAll" class="btn btn-primary">
+        ⚡ Analisar TUDO (silêncios + falas repetidas)
+        <span class="sub">1 clique: escuta o áudio, acha silêncios e falas de apontador/take errado</span>
+      </button>
+      <button id="btnSilAnalyze" class="btn btn-secondary">
+        1️⃣ Analisar SÓ os silêncios
+        <span class="sub">só escuta o áudio — não mexe em nada na timeline</span>
+      </button>
+      <button id="btnSilCut" class="btn btn-secondary" disabled>
+        2️⃣ Corte de TESTE (só 1 silêncio)
+        <span class="sub">libera depois da análise — confira o resultado antes do 3️⃣</span>
+      </button>
+      <label class="chk">
+        <input type="checkbox" id="silBackup" checked/>
+        🛟 criar cópia de segurança da sequência antes de cortar
+      </label>
+      <button id="btnSilCutAll" class="btn btn-warning" disabled>
+        3️⃣ EXCLUIR tudo que foi identificado
+        <span class="sub">libera depois da análise</span>
+      </button>
+    </section>
+
+    <section class="section">
+      <h2>🎬 Roteiro &amp; repetições</h2>
+      <p class="desc">
+        Pra vídeo gravado com apontador: uma pessoa lê a linha do roteiro e a outra repete.
+        Este modo acha as falas com o <b>mesmo texto em sequência</b> e marca todas menos a
+        <b>última</b> (o apontador e os takes errados saem, a repetição boa fica).
+        Confere pelos marcadores verdes e corta com o 3️⃣.
+      </p>
+      <div class="settings-grid">
+        <label title="Quão parecidos dois trechos precisam ser pra contar como repetição (70% funciona bem)">
+          Similaridade <input id="rotSim" type="number" value="70" min="40" max="100" step="5"/> %
+        </label>
+        <label title="Falas com menos palavras que isso são ignoradas (evita casar 'tá' com 'tá')">
+          Mín. <input id="rotMinWords" type="number" value="3" min="2" max="10" step="1"/> palavras
+        </label>
+      </div>
+      <button id="btnAiAnalyze" class="btn btn-primary">
+        🎬 Encontrar falas repetidas
+        <span class="sub">transcreve → acha os pares → marca apontador e takes errados</span>
+      </button>
+      <button id="btnAiReport" class="btn btn-secondary" disabled>
+        📄 Abrir relatório
+        <span class="sub">cada fala transcrita + quem fica e quem sai (com motivo)</span>
+      </button>
+      <button id="btnAiClearMarks" class="btn btn-secondary">
+        🧹 Limpar marcadores [GAMA] da timeline
+      </button>
+      <div id="aiKeyRow" class="custom-row hidden">
+        <input id="aiKey" type="password" placeholder="gsk_… (chave Groq)" style="flex:1; width:auto;"/>
+        <button id="btnAiKeySave" class="btn btn-secondary btn-inline">Salvar</button>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>📋 Log</h2>
+      <div id="log" class="log"></div>
+    </section>
+
+    <footer class="hint">
+      💡 A barra verde mostra o progresso e o ✖ cancela na hora.
+      Cancelou? O que já foi ajustado permanece — Ctrl+Z desfaz (1 passo por clipe).
+    </footer>
+  </div>
+
+  <script src="js/CSInterface.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
