@@ -301,32 +301,12 @@ h2 {
 }
 
 .sil-preview-bar {
-  display: flex;
-  height: 16px;
+  display: block;
   width: 100%;
+  height: 40px;
   background: #191919;
   border: 1px solid #333;
   border-radius: 4px;
-  overflow: hidden;
-}
-
-.sil-seg {
-  height: 100%;
-}
-
-.sil-seg-keep {
-  background: #2f8f4a;
-}
-
-.sil-seg-cut {
-  background: #a02020;
-  background-image: repeating-linear-gradient(
-    -45deg,
-    rgba(0, 0, 0, 0.25),
-    rgba(0, 0, 0, 0.25) 3px,
-    transparent 3px,
-    transparent 6px
-  );
 }
 
 .sil-preview-stats {

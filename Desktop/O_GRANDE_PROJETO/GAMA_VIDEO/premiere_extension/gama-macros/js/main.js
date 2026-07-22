@@ -365,6 +365,86 @@ async function detectSilences(mediaPath, w0, w1, db, dur, onProgress) {
   return intervals;
 }
 
+// ---------- waveform (forma da onda pro preview) ----------
+var waveformCache = {}; // "path|inP|outP|buckets" -> [pico 0..1, ...]
+var WAVEFORM_TOTAL_BUCKETS = 480; // orçamento total de barrinhas na largura do preview inteiro
+var WAVEFORM_SR = 3000; // taxa baixa de propósito: só a FORMA importa, não fidelidade de áudio
+
+// Quantos buckets (barrinhas) este clipe recebe, proporcional à fatia dele no total —
+// clipe maior tem mais barrinhas, clipe curto tem menos, soma sempre ~WAVEFORM_TOTAL_BUCKETS.
+function bucketsForClipCount(clipDur, totalDur) {
+  if (totalDur <= 0) return 4;
+  var n = Math.round(WAVEFORM_TOTAL_BUCKETS * (clipDur / totalDur));
+  return Math.max(4, Math.min(WAVEFORM_TOTAL_BUCKETS, n));
+}
+
+// Decodifica PCM cru (mono, taxa baixa) do trecho [inP,outP] do arquivo e reduz a `buckets`
+// picos normalizados 0..1 — é a "forma da onda" que o usuário vê. Cacheado: só roda 1x por
+// clipe/seleção; mudar Limiar/Mín/Margem depois disso é grátis (só recolore, não re-decodifica).
+function extractWaveformPeaks(mediaPath, inP, outP, buckets) {
+  return new Promise(function (resolve) {
+    if (!nodeRequire) { resolve(null); return; }
+    var key = mediaPath + '|' + inP.toFixed(2) + '|' + outP.toFixed(2) + '|' + buckets;
+    if (waveformCache.hasOwnProperty(key)) { resolve(waveformCache[key]); return; }
+
+    var cp;
+    try { cp = nodeRequire('child_process'); } catch (eReq) { resolve(null); return; }
+
+    function tryAt(idx) {
+      if (idx >= FFMPEG_PATHS.length) { resolve(null); return; }
+      var args = [
+        '-hide_banner', '-nostdin', '-loglevel', 'error',
+        '-ss', String(Math.max(0, inP)), '-i', mediaPath, '-t', String(Math.max(0.05, outP - inP)),
+        '-vn', '-sn', '-dn', '-ac', '1', '-ar', String(WAVEFORM_SR),
+        '-f', 's16le', '-acodec', 'pcm_s16le', 'pipe:1'
+      ];
+      var child;
+      try {
+        child = cp.spawn(FFMPEG_PATHS[idx], args, { windowsHide: true });
+      } catch (eSpawn) {
+        tryAt(idx + 1);
+        return;
+      }
+      var chunks = [];
+      child.stdout.on('data', function (c) { chunks.push(c); });
+      child.on('error', function (err) {
+        if (err && err.code === 'ENOENT') { tryAt(idx + 1); return; }
+        try { console.error('[GAMA waveform] spawn falhou:', mediaPath, err); } catch (eC) {}
+        resolve(null);
+      });
+      child.on('close', function () {
+        try {
+          var Buffer = nodeRequire('buffer').Buffer; // não existe Buffer global neste contexto CEP
+          var buf = Buffer.concat(chunks);
+          var nSamples = Math.floor(buf.length / 2);
+          if (nSamples < 2) { resolve(null); return; }
+          var chunkLen = Math.max(1, Math.floor(nSamples / buckets));
+          var peaks = [];
+          var maxPeak = 1;
+          for (var b = 0; b < buckets; b++) {
+            var start = b * chunkLen;
+            var end = (b === buckets - 1) ? nSamples : Math.min(nSamples, start + chunkLen);
+            var peak = 0;
+            for (var s = start; s < end; s++) {
+              var v = Math.abs(buf.readInt16LE(s * 2));
+              if (v > peak) peak = v;
+            }
+            peaks.push(peak);
+            if (peak > maxPeak) maxPeak = peak;
+          }
+          for (var n2 = 0; n2 < peaks.length; n2++) peaks[n2] = peaks[n2] / maxPeak;
+          waveformCache[key] = peaks;
+          resolve(peaks);
+        } catch (eBuf) {
+          try { console.error('[GAMA waveform] decode falhou:', mediaPath, eBuf); } catch (eC2) {}
+          resolve(null);
+        }
+      });
+    }
+    tryAt(0);
+  });
+}
+
 // Junta os trechos usados [inP,outP] de cada arquivo em janelas de análise
 function buildWindows(clips) {
   var byFile = {};
@@ -440,6 +520,7 @@ async function collectSelectedClips(verbose) {
 // é somente leitura, pra não surpreender o usuário enquanto ele digita.
 function renderSilPreview(clips, silByFile, pad) {
   var segs = [];
+  var clipMeta = []; // {clip, cuts:[[s0,s1],...]} — pra colorir a waveform depois, por clipe
   var totalDur = 0;
   var totalCut = 0;
   var nCuts = 0;
@@ -449,6 +530,7 @@ function renderSilPreview(clips, silByFile, pad) {
     var clipDur = cl.outP - cl.inP;
     if (clipDur <= 0) continue;
 
+    var cuts = [];
     var ivs = (silByFile[cl.path] || []).slice().sort(function (x, y) { return x[0] - y[0]; });
     var cursor = cl.inP;
     for (var v = 0; v < ivs.length; v++) {
@@ -457,12 +539,14 @@ function renderSilPreview(clips, silByFile, pad) {
       if (s1 - s0 < 0.2 || s0 < cursor) continue;
       if (s0 > cursor) segs.push({ type: 'keep', dur: s0 - cursor });
       segs.push({ type: 'cut', dur: s1 - s0 });
+      cuts.push([s0, s1]);
       totalCut += (s1 - s0);
       nCuts++;
       cursor = s1;
     }
     if (cl.outP - cursor > 0) segs.push({ type: 'keep', dur: cl.outP - cursor });
     totalDur += clipDur;
+    clipMeta.push({ clip: cl, cuts: cuts });
   }
 
   if (!totalDur) {
@@ -478,30 +562,106 @@ function renderSilPreview(clips, silByFile, pad) {
     else merged.push({ type: segs[m].type, dur: segs[m].dur });
   }
 
-  silPreviewBar.innerHTML = '';
-  for (var b = 0; b < merged.length; b++) {
-    var pct = (merged[b].dur / totalDur) * 100;
-    if (pct < 0.15) continue; // fatia invisível, não vale renderizar
-    var seg = document.createElement('div');
-    seg.className = 'sil-seg ' + (merged[b].type === 'cut' ? 'sil-seg-cut' : 'sil-seg-keep');
-    seg.style.flexGrow = String(merged[b].dur);
-    seg.title = (merged[b].type === 'cut' ? '✂️ corta' : '✅ fica') + ' · ' + fmtDur(merged[b].dur);
-    silPreviewBar.appendChild(seg);
-  }
+  silPreviewEl.classList.remove('hidden');
+  drawFlatBar(silPreviewBar, merged, totalDur); // instantâneo — só cor, sem forma ainda
+  updateSilWaveform(clipMeta, totalDur); // assíncrono — decodifica o áudio e desenha a onda real por cima
 
   var pctCut = totalDur > 0 ? Math.round((totalCut / totalDur) * 100) : 0;
   silPreviewStats.textContent = clips.length + ' clipe(s) · ' + nCuts + ' silêncio(s) detectado(s) — fica ' +
     fmtDur(totalDur - totalCut) + ' · corta ' + fmtDur(totalCut) + ' (' + pctCut + '%)';
-  silPreviewEl.classList.remove('hidden');
+}
+
+// Ajusta o canvas pra resolução real da tela (DPR) e limpa.
+function prepCanvas(canvas, cssHeight) {
+  var cssW = canvas.clientWidth || canvas.parentNode.clientWidth || 380;
+  var dpr = window.devicePixelRatio || 1;
+  canvas.width = Math.max(1, Math.round(cssW * dpr));
+  canvas.height = Math.max(1, Math.round(cssHeight * dpr));
+  var ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssW, cssHeight);
+  return { ctx: ctx, cssW: cssW, cssH: cssHeight };
+}
+
+// Desenho imediato (sem forma de onda ainda) — blocos sólidos, só pra dar feedback na hora.
+function drawFlatBar(canvas, merged, totalDur) {
+  var g = prepCanvas(canvas, 40);
+  var x = 0;
+  for (var i = 0; i < merged.length; i++) {
+    var w = (merged[i].dur / totalDur) * g.cssW;
+    g.ctx.fillStyle = merged[i].type === 'cut' ? '#a02020' : '#2f8f4a';
+    g.ctx.fillRect(x, 0, Math.ceil(w) + 0.5, g.cssH);
+    x += w;
+  }
+}
+
+// Waveform real, centralizada (barrinhas pra cima/baixo a partir do meio) — verde fica, vermelho corta.
+function drawWaveform(canvas, buckets) {
+  var g = prepCanvas(canvas, 40);
+  var n = buckets.length;
+  if (!n) return;
+  var barW = g.cssW / n;
+  var mid = g.cssH / 2;
+  for (var i = 0; i < n; i++) {
+    var b = buckets[i];
+    var h = Math.max(2, b.peak * g.cssH);
+    var x = i * barW;
+    g.ctx.fillStyle = b.cut ? '#a02020' : '#2f8f4a';
+    g.ctx.fillRect(x, mid - h / 2, Math.max(1, barW - 0.5), h);
+  }
+}
+
+var waveformToken = 0; // invalida passadas antigas quando o usuário muda os campos de novo no meio do caminho
+
+async function updateSilWaveform(clipMeta, totalDur) {
+  var myToken = ++waveformToken;
+  if (!nodeRequire || !totalDur || !clipMeta.length) return;
+
+  var allBuckets = [];
+  for (var i = 0; i < clipMeta.length; i++) {
+    if (myToken !== waveformToken) return; // ficou obsoleto — outra passada já começou
+    var cl = clipMeta[i].clip;
+    var cuts = clipMeta[i].cuts;
+    var clipDur = cl.outP - cl.inP;
+    if (clipDur <= 0) continue;
+
+    var n = bucketsForClipCount(clipDur, totalDur);
+    var peaks = null;
+    try {
+      peaks = await extractWaveformPeaks(cl.path, cl.inP, cl.outP, n);
+    } catch (eEx) {
+      try { console.error('[GAMA waveform] extração falhou:', cl.path, eEx); } catch (eC) {}
+    }
+    if (myToken !== waveformToken) return;
+    if (!peaks) {
+      peaks = [];
+      for (var z = 0; z < n; z++) peaks.push(0.35); // sem decodificação: barra neutra baixa, não trava o preview
+    }
+
+    var bucketDur = clipDur / n;
+    for (var b = 0; b < n; b++) {
+      var tMid = cl.inP + (b + 0.5) * bucketDur;
+      var isCut = false;
+      for (var c = 0; c < cuts.length; c++) {
+        if (tMid >= cuts[c][0] && tMid <= cuts[c][1]) { isCut = true; break; }
+      }
+      allBuckets.push({ peak: peaks[b] || 0, cut: isCut });
+    }
+  }
+
+  if (myToken !== waveformToken) return;
+  drawWaveform(silPreviewBar, allBuckets);
 }
 
 function showSilPreviewMsg(msg) {
-  silPreviewBar.innerHTML = '';
+  waveformToken++; // cancela qualquer decodificação de waveform ainda em andamento
+  prepCanvas(silPreviewBar, 40); // só limpa
   silPreviewStats.textContent = msg;
   silPreviewEl.classList.remove('hidden');
 }
 
 function hideSilPreview() {
+  waveformToken++;
   silPreviewEl.classList.add('hidden');
 }
 
@@ -519,27 +679,39 @@ async function previewSilences() {
   }
   if (isNaN(pad) || pad < 0) pad = 0;
 
-  var loaded = await ensureJsxLoaded();
-  if (!loaded) return;
+  try {
+    var loaded = await ensureJsxLoaded();
+    if (!loaded) { showSilPreviewMsg('⚠️ host.jsx não carregou — veja o log acima.'); return; }
 
-  var collected = await collectSelectedClips(false);
-  if (!collected || !collected.clips.length) {
-    showSilPreviewMsg('Selecione clipes com áudio na timeline pra ver o preview.');
-    return;
-  }
-
-  var jobs = buildWindows(collected.clips);
-  var silByFile = {};
-  for (var j = 0; j < jobs.length; j++) {
-    var job = jobs[j];
-    try {
-      var ivs = await detectSilences(job.path, job.w0, job.w1, db, dur, null);
-      silByFile[job.path] = (silByFile[job.path] || []).concat(ivs);
-    } catch (e) {
-      // falha pontual num arquivo não deve derrubar o preview inteiro
+    var collected = await collectSelectedClips(false);
+    if (!collected || !collected.clips.length) {
+      showSilPreviewMsg('Selecione clipes com áudio na timeline pra ver o preview.');
+      return;
     }
+
+    var jobs = buildWindows(collected.clips);
+    var silByFile = {};
+    var jobErrors = 0;
+    for (var j = 0; j < jobs.length; j++) {
+      var job = jobs[j];
+      try {
+        var ivs = await detectSilences(job.path, job.w0, job.w1, db, dur, null);
+        silByFile[job.path] = (silByFile[job.path] || []).concat(ivs);
+      } catch (eJob) {
+        // falha pontual num arquivo não deve derrubar o preview inteiro — mas fica visível no console
+        jobErrors++;
+        try { console.error('[GAMA preview] falha em', job.path, eJob); } catch (eC) {}
+      }
+    }
+    if (jobErrors && jobErrors === jobs.length) {
+      showSilPreviewMsg('⚠️ Preview falhou em todos os arquivos — veja o console (F12 no painel) ou tente 1️⃣ Analisar.');
+      return;
+    }
+    renderSilPreview(collected.clips, silByFile, pad);
+  } catch (eTop) {
+    try { console.error('[GAMA preview] erro geral:', eTop); } catch (eC2) {}
+    showSilPreviewMsg('⚠️ Preview falhou: ' + (eTop && eTop.message ? eTop.message : String(eTop)));
   }
-  renderSilPreview(collected.clips, silByFile, pad);
 }
 
 var previewDebounceTimer = null;
@@ -558,7 +730,9 @@ function runPreviewCoalesced() {
   if (busy) return; // análise/corte manual em andamento — não interferir
   if (previewBusy) { previewQueued = true; return; }
   previewBusy = true;
-  previewSilences().catch(function () {}).finally(function () {
+  previewSilences().catch(function (e) {
+    try { console.error('[GAMA preview] runPreviewCoalesced:', e); } catch (eC) {}
+  }).finally(function () {
     previewBusy = false;
     if (previewQueued) { previewQueued = false; runPreviewCoalesced(); }
   });
@@ -1649,7 +1823,7 @@ btnSilCutAll.addEventListener('click', async function () {
 
 // ---------- init ----------
 (async function init() {
-  log('Painel v1.26 carregado (preview ao vivo do corte de silêncio)', 'success');
+  log('Painel v1.27 carregado (waveform real no preview de silêncio)', 'success');
   log(nodeRequire ? 'Node.js ativo ✔ (FFmpeg disponível)' : '⚠️ Node.js inativo — reinicie o Premiere pra ativar o Remover Silêncios', nodeRequire ? 'success' : 'error');
   var loaded = await ensureJsxLoaded();
   if (loaded) {

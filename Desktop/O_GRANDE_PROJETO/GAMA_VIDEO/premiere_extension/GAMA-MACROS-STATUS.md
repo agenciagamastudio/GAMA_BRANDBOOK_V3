@@ -2,7 +2,7 @@
 
 > **Gatilho:** quando o usuário disser "continuar com o GAMA Macros", leia ESTE arquivo inteiro antes de qualquer coisa. Ele é a memória do projeto.
 
-**Última sessão:** 2026-07-22 | **Versão:** painel v1.26 / host.jsx 1.25.0 (host.jsx não mudou nesta sessão)
+**Última sessão:** 2026-07-22 | **Versão:** painel v1.27 / host.jsx 1.25.0 (host.jsx não mudou nesta sessão)
 **Fonte oficial (este repo):** `premiere_extension/gama-macros/`
 **Instalado (deploy) em:** `%APPDATA%\Adobe\CEP\extensions\com.gama.macros\`
 **Instalar/atualizar deploy:** rodar `premiere_extension/install.ps1`
@@ -21,7 +21,8 @@ Painel CEP para Premiere Pro com macros de edição em massa. Nasceu porque sele
 | 📐 Ajustar ao tamanho do quadro (selecionados/todos) | ✅ 100% validado | 3127 clipes em produção; via Motion/Scale (QE setScaleToFrameSize é quebrado) |
 | 🔢 Escala manual % | ✅ 100% validado | |
 | ✂️ Remover silêncios | ✅ 100% validado | FFmpeg silencedetect por janelas usadas na timeline |
-| 👁️ Preview ao vivo (fica/corta) | 🆕 v1.26, NÃO testado no Premiere ainda | Barra de resumo único abaixo de Limiar/Mín/Margem, atualiza sozinha (debounce 700ms) ao digitar. Só leitura — não mexe em cutPlan/botões 2️⃣3️⃣. Reaproveita cache de `detectSilences` (mudar só a Margem é grátis, não reprocessa FFmpeg). Ver "PRIMEIRA COISA A FAZER" abaixo |
+| 👁️ Preview ao vivo (fica/corta) | ✅ v1.26 confirmado funcionando no Premiere | Barra de resumo único abaixo de Limiar/Mín/Margem, atualiza sozinha (debounce 700ms) ao digitar. Só leitura — não mexe em cutPlan/botões 2️⃣3️⃣. Reaproveita cache de `detectSilences` (mudar só a Margem é grátis, não reprocessa FFmpeg) |
+| 🌊 Waveform real no preview | 🆕 v1.27, NÃO testado no Premiere ainda | Canvas em vez de barra de blocos: decodifica PCM cru via FFmpeg (`extractWaveformPeaks`, mono 3000Hz, downsample em picos por bucket) e desenha a onda de verdade, colorida verde/vermelho. Desenho em 2 passos: `drawFlatBar` instantâneo (cor sólida, feedback na hora) → `updateSilWaveform` assíncrono redesenha por cima com a forma real assim que decodifica (progressivo, não trava a UI). Cache por clipe (`waveformCache`, chave path+inP+outP+buckets) — só decodifica 1x por seleção; mudar Limiar/Mín/Margem depois reaproveita e só recolore. Ver "PRIMEIRA COISA A FAZER" abaixo |
 | 🎬 Roteiro & repetições | ✅ validado em 61min real | Transcreve (Groq Whisper), acha falas consecutivas com texto ≥70% igual, marca todas menos a ÚLTIMA (remove apontador + takes ruins). 55 achados de qualidade |
 | ⚡ Analisar TUDO | ✅ | Silêncios + Roteiro num clique, planos se somam |
 | 3️⃣ EXCLUIR (motor de corte) | ✅ funcional | **Validação end-to-end:** 61m08s → 46m18s (−14m50s, 571 cortes) — mas na v1.24 levou 28min + 24min de verificador; **v1.25 (instalada, NÃO testada ainda) deve fazer em ~5-10min flat** |
@@ -29,11 +30,14 @@ Painel CEP para Premiere Pro com macros de edição em massa. Nasceu porque sele
 
 ## PRIMEIRA COISA A FAZER na próxima sessão
 
-**1. Validar o Preview ao vivo (v1.26, recém-implementado, nunca aberto no Premiere):**
-1. Abrir o painel (Window → Extensions → GAMA Macros), selecionar clipes com áudio na timeline
-2. Mudar Limiar/Mín/Margem → confirmar que a barra aparece ~700ms depois de parar de digitar, com trechos verdes (fica) e vermelhos (corta) proporcionais + texto "N clipe(s) · N silêncio(s) — fica X · corta Y (Z%)"
-3. Clicar "1️⃣ Analisar SÓ os silêncios" → a barra deve bater com o resultado real (mesmos números do log "✅ Análise: N silêncio(s) = ...")
-4. Checar `gama-log.txt` se algo quebrar — a lógica de preview não loga por padrão (é silenciosa de propósito), então erros JS aparecem só no console do painel (botão 🔍 não cobre isso; pode precisar abrir DevTools do CEP se travar)
+**1. Validar a Waveform real (v1.27, recém-implementada, nunca aberta no Premiere):**
+1. Abrir o painel, selecionar clipes com áudio, mexer em Limiar/Mín/Margem
+2. Esperado: barra colorida aparece na hora (ainda em blocos sólidos), e ~1-2s depois (por clipe) a forma de onda real desenha por cima, sem travar a UI
+3. Mudar só a Margem depois disso → deve recolorir instantâneo, SEM novo delay de decodificação (cache de waveform por clipe)
+4. Se não aparecer forma nenhuma (só os blocos sólidos ficando pra sempre): abrir console do painel (F12 no CEP) e procurar `[GAMA waveform]` — provavelmente `Buffer`/`child_process` falhando ou FFmpeg não encontrado
+5. Se a forma aparecer mas em posição errada (verde/vermelho não bate com o corte real): bug de mapeamento tempo→bucket em `updateSilWaveform` (comparar com os números do 1️⃣ Analisar)
+
+Preview ao vivo em si (barra colorida/estatísticas, sem a waveform) — já CONFIRMADO funcionando (v1.26), não precisa retestar do zero.
 
 **2. Validar a v1.25 em lote grande** (a correção definitiva de performance ainda não foi medida):
 1. Usuário roda ⚡ + 3️⃣ num bruto grande → observar linhas `⏲ ritmo` no log
