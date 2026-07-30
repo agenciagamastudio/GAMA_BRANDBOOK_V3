@@ -1,0 +1,77 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      TZ: ${TZ}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"  # apenas dev — comentar em prod
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  dragonfly:
+    image: docker.dragonflydb.io/dragonfly/dragonfly:latest
+    command: ["dragonfly", "--logtostderr", "--proactor_threads=4"]
+    ports:
+      - "6379:6379"  # apenas dev
+    healthcheck:
+      test: ["CMD", "redis-cli", "PING"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  evolution:
+    image: atendai/evolution-api:latest
+    environment:
+      SERVER_URL: http://evolution:8080
+      DATABASE_ENABLED: "false"  # Story 1.2 add Postgres
+      STORE_MESSAGE: "true"
+      STORE_MESSAGE_UP: "true"
+      TZ: ${TZ}
+    ports:
+      - "8080:8080"
+    volumes:
+      - evolution_instances:/evolution/instances
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file: .env
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      TZ: ${TZ}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      dragonfly:
+        condition: service_healthy
+      evolution:
+        condition: service_started
+    ports:
+      - "${HEALTH_PORT:-8081}:${HEALTH_PORT:-8081}"  # evitar conflito com Evolution
+    volumes:
+      - ./src:/app/src  # dev hot-reload
+      - ./logs:/app/logs
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  evolution_instances:
