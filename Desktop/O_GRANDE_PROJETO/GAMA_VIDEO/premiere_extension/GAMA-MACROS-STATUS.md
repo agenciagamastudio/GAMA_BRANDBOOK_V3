@@ -2,7 +2,19 @@
 
 > **Gatilho:** quando o usuário disser "continuar com o GAMA Macros", leia ESTE arquivo inteiro antes de qualquer coisa. Ele é a memória do projeto.
 
-**Última sessão:** 2026-07-22 | **Versão:** painel v1.27 / host.jsx 1.25.0 (host.jsx não mudou nesta sessão)
+**Última sessão:** 2026-08-30 | **Versão:** painel v1.33.0 / host.jsx 1.33.0 / manifest 1.33.0
+**Última mudança (v1.33.0 — 2026-08-30):**
+- Namespace `GAMA` (`jsx/host.jsx`): isola variáveis globais, padroniza retornos `{success, data, error, v}`.
+- `_gamaFindClipAt`: intersecção parcial (`cs < e - 0.005 && ce > s + 0.005`) — fix bug silêncio >60s com A/V desvinculado consolidado dentro do namespace.
+- `waveformCache` (`js/main.js`): chave inteligente (`path|inP|outP|buckets|seq|mtime`) + `scheduleWaveformUpdate` (debounce 250ms).
+- `styles.css`: tokens `--gama-*` (GAMA DS V3) aplicados; `backdrop-filter` nos painéis.
+- `manifest.xml`: versão 1.33.0; `index.html`: meta `version` + `lang="pt-BR"` + `aria-label`.
+- Protocolo JSON: `docs/protocolo-json-cep.md` (padrão `{success, data?, error?, v}` para `evalScript`).
+- `CHANGELOG.md` criado; `docs/testes-fase-5.md` criado (7 cenários, manual pendente — requer Premiere Pro 23.6.8 + painel aberto).
+- Nenhum `git push` executado (autoridade exclusiva @devops conforme `agent-authority.md`).
+
+**Status atual:** Fases 1–4 COMPLETAS | Fase 5 (testes) PENDENTE MANUAL (requer Premiere) | Fase 6 (deploy/ZXP) só após testes PASS.
+**Repositório GitHub (próprio, privado):** https://github.com/agenciagamastudio/Gama_Macro (branch `main`) — extraído via `git subtree split --prefix="Desktop/O_GRANDE_PROJETO/GAMA_VIDEO/premiere_extension"` a partir do repo-monorepo da home; **fluxo de push:** rodar `git subtree split` de novo a cada sessão (gera branch temporário), `git push gama-macro <branch>:main`, depois apagar o branch temporário local (`git branch -D`) — mesmo padrão já usado no GAMA_VOZ.
 **Fonte oficial (este repo):** `premiere_extension/gama-macros/`
 **Instalado (deploy) em:** `%APPDATA%\Adobe\CEP\extensions\com.gama.macros\`
 **Instalar/atualizar deploy:** rodar `premiere_extension/install.ps1`
@@ -20,7 +32,7 @@ Painel CEP para Premiere Pro com macros de edição em massa. Nasceu porque sele
 |---|---|---|
 | 📐 Ajustar ao tamanho do quadro (selecionados/todos) | ✅ 100% validado | 3127 clipes em produção; via Motion/Scale (QE setScaleToFrameSize é quebrado) |
 | 🔢 Escala manual % | ✅ 100% validado | |
-| ✂️ Remover silêncios | ✅ 100% validado | FFmpeg silencedetect por janelas usadas na timeline |
+| ✂️ Remover silêncios | ✅ 100% validado (v1.25.1 corrige falha V- only em silêncios >60s) | FFmpeg silencedetect por janelas usadas na timeline |
 | 👁️ Preview ao vivo (fica/corta) | ✅ v1.26 confirmado funcionando no Premiere | Barra de resumo único abaixo de Limiar/Mín/Margem, atualiza sozinha (debounce 700ms) ao digitar. Só leitura — não mexe em cutPlan/botões 2️⃣3️⃣. Reaproveita cache de `detectSilences` (mudar só a Margem é grátis, não reprocessa FFmpeg) |
 | 🌊 Waveform real no preview | 🆕 v1.27, NÃO testado no Premiere ainda | Canvas em vez de barra de blocos: decodifica PCM cru via FFmpeg (`extractWaveformPeaks`, mono 3000Hz, downsample em picos por bucket) e desenha a onda de verdade, colorida verde/vermelho. Desenho em 2 passos: `drawFlatBar` instantâneo (cor sólida, feedback na hora) → `updateSilWaveform` assíncrono redesenha por cima com a forma real assim que decodifica (progressivo, não trava a UI). Cache por clipe (`waveformCache`, chave path+inP+outP+buckets) — só decodifica 1x por seleção; mudar Limiar/Mín/Margem depois reaproveita e só recolore. Ver "PRIMEIRA COISA A FAZER" abaixo |
 | 🎬 Roteiro & repetições | ✅ validado em 61min real | Transcreve (Groq Whisper), acha falas consecutivas com texto ≥70% igual, marca todas menos a ÚLTIMA (remove apontador + takes ruins). 55 achados de qualidade |
@@ -30,14 +42,14 @@ Painel CEP para Premiere Pro com macros de edição em massa. Nasceu porque sele
 
 ## PRIMEIRA COISA A FAZER na próxima sessão
 
-**1. Validar a Waveform real (v1.27, recém-implementada, nunca aberta no Premiere):**
-1. Abrir o painel, selecionar clipes com áudio, mexer em Limiar/Mín/Margem
-2. Esperado: barra colorida aparece na hora (ainda em blocos sólidos), e ~1-2s depois (por clipe) a forma de onda real desenha por cima, sem travar a UI
-3. Mudar só a Margem depois disso → deve recolorir instantâneo, SEM novo delay de decodificação (cache de waveform por clipe)
-4. Se não aparecer forma nenhuma (só os blocos sólidos ficando pra sempre): abrir console do painel (F12 no CEP) e procurar `[GAMA waveform]` — provavelmente `Buffer`/`child_process` falhando ou FFmpeg não encontrado
-5. Se a forma aparecer mas em posição errada (verde/vermelho não bate com o corte real): bug de mapeamento tempo→bucket em `updateSilWaveform` (comparar com os números do 1️⃣ Analisar)
+**1. Validar a v1.33.0 no Premiere (refatoração completa, Fases 1–4 aplicadas, testes manuais pendentes):**
+1. Abrir o painel, confirmar que o título mostra "GAMA Macros v1.33.0".
+2. Selecionar clipes com áudio e rodar o cenário 1 do `docs/testes-fase-5.md` (silêncio >60s com A/V desvinculado) — esperado: áudio E vídeo cortados em sincronia.
+3. Rodar cenário 4 (waveform em clipe 30min+) — esperado: canvas sem freeze; mudar Margem → recolorir instantâneo (cache de `waveformCache`); redimensionar painel → sem travamento (debounce 250ms).
+4. Conferir tokens GAMA DS V3 aplicados (cores `--gama-color-primary` = ciano, superfície escura, glassmorphism sutil nas seções).
+5. Se algo falhar: ler `gama-log.txt` (pasta CEP deployada) + console do painel (F12 no CEP) → corrigir (`jsx/host.jsx` ou `js/main.js`) → re-testar.
 
-Preview ao vivo em si (barra colorida/estatísticas, sem a waveform) — já CONFIRMADO funcionando (v1.26), não precisa retestar do zero.
+**2. Após todos os 7 cenários PASS:** `@devops` autoriza o fluxo de push (subtree split → `Gama_Macro:main`).
 
 **2. Validar a v1.25 em lote grande** (a correção definitiva de performance ainda não foi medida):
 1. Usuário roda ⚡ + 3️⃣ num bruto grande → observar linhas `⏲ ritmo` no log

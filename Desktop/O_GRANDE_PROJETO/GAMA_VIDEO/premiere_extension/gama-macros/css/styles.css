@@ -1,3 +1,40 @@
+/* ============================================================
+ * GAMA Macros — styles.css (v1.33.0)
+ * Tokens: GAMA Design System V3 (fallback local se DS não carregar).
+ * Tema: dark, glassmorphism sutil, PT-BR.
+ * ============================================================ */
+:root {
+  /* tokens GAMA DS V3 — com fallback local (CSS custom properties) */
+  --gama-color-bg: #1e1e1e;
+  --gama-color-surface: #2a2a2a;
+  --gama-color-surface-2: #262626;
+  --gama-color-text: #e8e8e8;
+  --gama-color-text-dim: #9a9a9a;
+  --gama-color-text-mute: #777;
+  --gama-color-primary: #00d4ff;
+  --gama-color-primary-dim: #0e7fa8;
+  --gama-color-success: #4cd964;
+  --gama-color-success-bg: #3d5a00;
+  --gama-color-warning: #8a5a00;
+  --gama-color-warning-confirm: #b33a00;
+  --gama-color-danger: #a02020;
+  --gama-color-error: #ff6b6b;
+  --gama-color-keep: #2f8f4a;
+  --gama-color-border: #333;
+  --gama-color-border-strong: #444;
+  --gama-color-input-bg: #1c1c1c;
+  --gama-color-track: #191919;
+  --gama-font-body: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  --gama-font-mono: Consolas, monospace;
+  --gama-radius-sm: 4px;
+  --gama-radius-md: 6px;
+  --gama-spacing-1: 4px;
+  --gama-spacing-2: 8px;
+  --gama-spacing-3: 10px;
+  --gama-spacing-4: 12px;
+  --gama-glass-blur: blur(8px);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -9,18 +46,18 @@ html, body {
 }
 
 body {
-  background: #1e1e1e;
-  color: #e8e8e8;
-  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  background: var(--gama-color-bg);
+  color: var(--gama-color-text);
+  font-family: var(--gama-font-body);
   font-size: 12px;
-  padding: 10px;
+  padding: var(--gama-spacing-3);
   overflow-y: auto;
 }
 
 .container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--gama-spacing-3);
   max-width: 420px;
 }
 
@@ -38,8 +75,8 @@ h1 {
 h2 {
   font-size: 12px;
   font-weight: 600;
-  margin-bottom: 8px;
-  color: #00d4ff;
+  margin-bottom: var(--gama-spacing-2);
+  color: var(--gama-color-primary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -51,41 +88,41 @@ h2 {
 .progress-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: #262626;
-  border: 1px solid #3d5a00;
-  border-radius: 4px;
-  padding: 7px 8px;
+  gap: var(--gama-spacing-2);
+  background: var(--gama-color-surface-2);
+  border: 1px solid var(--gama-color-success-bg);
+  border-radius: var(--gama-radius-sm);
+  padding: 7px var(--gama-spacing-2);
 }
 
 .progress-track {
   flex: 1;
   height: 8px;
-  background: #191919;
-  border-radius: 4px;
+  background: var(--gama-color-track);
+  border-radius: var(--gama-radius-sm);
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
   width: 0%;
-  background: #4cd964;
-  border-radius: 4px;
+  background: var(--gama-color-success);
+  border-radius: var(--gama-radius-sm);
   transition: width 0.15s;
 }
 
 .progress-text {
   font-size: 10.5px;
   color: #ccc;
-  font-family: Consolas, monospace;
+  font-family: var(--gama-font-mono);
   white-space: nowrap;
 }
 
 .btn-cancel {
-  background: #a02020;
+  background: var(--gama-color-danger);
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--gama-radius-sm);
   padding: 5px 9px;
   cursor: pointer;
   font-size: 11px;
@@ -103,35 +140,36 @@ h2 {
 
 .desc {
   font-size: 11px;
-  color: #9a9a9a;
+  color: var(--gama-color-text-dim);
   line-height: 1.45;
-  margin-bottom: 10px;
+  margin-bottom: var(--gama-spacing-3);
 }
 
 .seq-info {
-  background: #262626;
-  border: 1px solid #333;
-  border-radius: 4px;
-  padding: 6px 8px;
+  background: var(--gama-color-surface-2);
+  border: 1px solid var(--gama-color-border);
+  border-radius: var(--gama-radius-sm);
+  padding: 6px var(--gama-spacing-2);
   font-size: 11px;
   color: #aaa;
   min-height: 26px;
 }
 
 .section {
-  background: #2a2a2a;
-  padding: 10px;
-  border-radius: 6px;
-  border-left: 3px solid #00d4ff;
+  background: var(--gama-color-surface);
+  padding: var(--gama-spacing-3);
+  border-radius: var(--gama-radius-md);
+  border-left: 3px solid var(--gama-color-primary);
+  backdrop-filter: var(--gama-glass-blur);
 }
 
 .btn {
   display: block;
   width: 100%;
-  padding: 9px 10px;
-  margin-bottom: 8px;
+  padding: 9px var(--gama-spacing-3);
+  margin-bottom: var(--gama-spacing-2);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--gama-radius-sm);
   cursor: pointer;
   font-weight: 600;
   font-size: 12px;
@@ -162,15 +200,15 @@ h2 {
 }
 
 .btn-primary {
-  background: #0e7fa8;
+  background: var(--gama-color-primary-dim);
 }
 
 .btn-warning {
-  background: #8a5a00;
+  background: var(--gama-color-warning);
 }
 
 .btn-warning.confirming {
-  background: #b33a00;
+  background: var(--gama-color-warning-confirm);
 }
 
 .btn-secondary {
@@ -186,14 +224,14 @@ h2 {
 
 .header-btns {
   display: flex;
-  gap: 4px;
+  gap: var(--gama-spacing-1);
 }
 
 .btn-mini {
   background: #3d3d3d;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--gama-radius-sm);
   width: 26px;
   height: 26px;
   cursor: pointer;
@@ -208,13 +246,13 @@ h2 {
   display: flex;
   flex-wrap: wrap;
   gap: 6px 12px;
-  margin-bottom: 10px;
+  margin-bottom: var(--gama-spacing-3);
 }
 
 .settings-grid label {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--gama-spacing-1);
   font-size: 11px;
   color: #bbb;
   cursor: help;
@@ -223,10 +261,10 @@ h2 {
 .settings-grid input {
   width: 54px;
   padding: 5px 6px;
-  background: #1c1c1c;
+  background: var(--gama-color-input-bg);
   color: #fff;
-  border: 1px solid #444;
-  border-radius: 4px;
+  border: 1px solid var(--gama-color-border-strong);
+  border-radius: var(--gama-radius-sm);
   font-size: 11px;
 }
 
@@ -236,12 +274,12 @@ h2 {
   gap: 6px;
   font-size: 11px;
   color: #bbb;
-  margin: 2px 0 8px;
+  margin: 2px 0 var(--gama-spacing-2);
   cursor: pointer;
 }
 
 .chk input {
-  accent-color: #00d4ff;
+  accent-color: var(--gama-color-primary);
 }
 
 .custom-row {
@@ -253,11 +291,11 @@ h2 {
 
 .custom-row input {
   width: 70px;
-  padding: 7px 8px;
-  background: #1c1c1c;
+  padding: 7px var(--gama-spacing-2);
+  background: var(--gama-color-input-bg);
   color: #fff;
-  border: 1px solid #444;
-  border-radius: 4px;
+  border: 1px solid var(--gama-color-border-strong);
+  border-radius: var(--gama-radius-sm);
   font-size: 12px;
 }
 
@@ -266,13 +304,13 @@ h2 {
 }
 
 .log {
-  background: #191919;
-  border: 1px solid #333;
-  border-radius: 4px;
+  background: var(--gama-color-track);
+  border: 1px solid var(--gama-color-border);
+  border-radius: var(--gama-radius-sm);
   padding: 6px;
   height: 110px;
   overflow-y: auto;
-  font-family: Consolas, monospace;
+  font-family: var(--gama-font-mono);
   font-size: 10.5px;
   line-height: 1.5;
 }
@@ -283,30 +321,30 @@ h2 {
 }
 
 .log-entry.success {
-  color: #4cd964;
+  color: var(--gama-color-success);
 }
 
 .log-entry.error {
-  color: #ff6b6b;
+  color: var(--gama-color-error);
 }
 
 .hint {
   font-size: 10px;
-  color: #777;
+  color: var(--gama-color-text-mute);
   line-height: 1.4;
 }
 
 .sil-preview {
-  margin: -2px 0 10px;
+  margin: -2px 0 var(--gama-spacing-3);
 }
 
 .sil-preview-bar {
   display: block;
   width: 100%;
   height: 40px;
-  background: #191919;
-  border: 1px solid #333;
-  border-radius: 4px;
+  background: var(--gama-color-track);
+  border: 1px solid var(--gama-color-border);
+  border-radius: var(--gama-radius-sm);
 }
 
 .sil-preview-stats {
@@ -334,9 +372,9 @@ h2 {
 }
 
 .sil-dot-keep {
-  background: #2f8f4a;
+  background: var(--gama-color-keep);
 }
 
 .sil-dot-cut {
-  background: #a02020;
+  background: var(--gama-color-danger);
 }

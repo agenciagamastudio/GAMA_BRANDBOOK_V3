@@ -2,7 +2,9 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8"/>
-  <title>GAMA Macros</title>
+  <meta name="version" content="1.33.0"/>
+  <meta name="language" content="pt-BR"/>
+  <title>GAMA Macros v1.33.0 — Painel CEP (PT-BR)</title>
   <link rel="stylesheet" href="css/styles.css"/>
 </head>
 <body>
@@ -10,8 +12,8 @@
     <header>
       <h1>🎬 GAMA Macros</h1>
       <div class="header-btns">
-        <button id="btnDiag" class="btn-mini" title="Gerar relatório técnico (diag.txt) — usar só se algo der errado">🔍</button>
-        <button id="btnRefresh" class="btn-mini" title="Atualizar a contagem de clipes e seleção">↻</button>
+        <button id="btnDiag" class="btn-mini" title="Gerar relatório técnico (diag.txt) — usar só se algo der errado" aria-label="Gerar relatório de diagnóstico">🔍</button>
+        <button id="btnRefresh" class="btn-mini" title="Atualizar a contagem de clipes e seleção" aria-label="Atualizar contagem de clipes">↻</button>
       </div>
     </header>
 
@@ -32,11 +34,11 @@
         É o mesmo que botão direito → "Escala para o tamanho do quadro" —
         só que sem travar o Premiere.
       </p>
-      <button id="btnScaleSelected" class="btn btn-primary">
+      <button id="btnScaleSelected" class="btn btn-primary" aria-label="Aplicar escala nos clipes selecionados">
         ▶ Só nos clipes SELECIONADOS
         <span class="sub">selecione na timeline (Ctrl+A pega todos) e clique aqui</span>
       </button>
-      <button id="btnScaleAll" class="btn btn-warning">
+      <button id="btnScaleAll" class="btn btn-warning" aria-label="Aplicar escala em todos os clipes da sequência">
         ▶ Em TODOS os clipes da sequência
         <span class="sub">não precisa selecionar nada — pede confirmação com 2º clique</span>
       </button>
@@ -68,8 +70,11 @@
         <label title="Silêncios mais curtos que isso são ignorados (respiros normais da fala).">
           Mín. <input id="silDur" type="number" value="0.8" step="0.1" min="0.1"/> s
         </label>
-        <label title="Respiro que fica antes e depois de cada corte, pra fala não começar 'seca'.">
-          Margem <input id="silPad" type="number" value="0.1" step="0.05" min="0"/> s
+        <label title="Respiro que fica ANTES do início do silêncio — preserva o rabo da fala anterior.">
+          Margem início <input id="silPadStart" type="number" value="0.1" step="0.05" min="0"/> s
+        </label>
+        <label title="Respiro que fica DEPOIS do fim do silêncio — evita o corte abrupto na palavra seguinte.">
+          Margem fim <input id="silPadEnd" type="number" value="0.2" step="0.05" min="0"/> s
         </label>
       </div>
 

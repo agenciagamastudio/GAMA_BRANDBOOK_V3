@@ -18,7 +18,8 @@ var btnSilCutAll = document.getElementById('btnSilCutAll');
 var silBackupChk = document.getElementById('silBackup');
 var silDbInput = document.getElementById('silDb');
 var silDurInput = document.getElementById('silDur');
-var silPadInput = document.getElementById('silPad');
+var silPadStartInput = document.getElementById('silPadStart');
+var silPadEndInput = document.getElementById('silPadEnd');
 var silPreviewEl = document.getElementById('silPreview');
 var silPreviewBar = document.getElementById('silPreviewBar');
 var silPreviewStats = document.getElementById('silPreviewStats');
@@ -366,7 +367,9 @@ async function detectSilences(mediaPath, w0, w1, db, dur, onProgress) {
 }
 
 // ---------- waveform (forma da onda pro preview) ----------
-var waveformCache = {}; // "path|inP|outP|buckets" -> [pico 0..1, ...]
+// Cache inteligente: chave = path + in/out + buckets + seq + mtime.
+// Se o arquivo for substituído (mesmo path), mtime muda → cache invalidado automaticamente.
+var waveformCache = {}; // "path|inP|outP|buckets|seq|mtime" -> [pico 0..1, ...]
 var WAVEFORM_TOTAL_BUCKETS = 480; // orçamento total de barrinhas na largura do preview inteiro
 var WAVEFORM_SR = 3000; // taxa baixa de propósito: só a FORMA importa, não fidelidade de áudio
 
@@ -384,7 +387,7 @@ function bucketsForClipCount(clipDur, totalDur) {
 function extractWaveformPeaks(mediaPath, inP, outP, buckets) {
   return new Promise(function (resolve) {
     if (!nodeRequire) { resolve(null); return; }
-    var key = mediaPath + '|' + inP.toFixed(2) + '|' + outP.toFixed(2) + '|' + buckets;
+    var key = mediaPath + '|' + inP.toFixed(2) + '|' + outP.toFixed(2) + '|' + buckets + '|' + (window.gamaSeq || 'v1.33') + '|' + (window.gamaMtime || 0);
     if (waveformCache.hasOwnProperty(key)) { resolve(waveformCache[key]); return; }
 
     var cp;
@@ -518,7 +521,10 @@ async function collectSelectedClips(verbose) {
 // Monta o mesmo recorte que o motor de corte real vai usar (mesmas fórmulas de
 // pad/EDGE_GUARD da linha 494 abaixo), só que sem tocar em cutPlan/botões —
 // é somente leitura, pra não surpreender o usuário enquanto ele digita.
-function renderSilPreview(clips, silByFile, pad) {
+// margins = {start, end} — margens independentes ANTES/DEPOIS do silêncio.
+function renderSilPreview(clips, silByFile, margins) {
+  var padStart = margins.start;
+  var padEnd = margins.end;
   var segs = [];
   var clipMeta = []; // {clip, cuts:[[s0,s1],...]} — pra colorir a waveform depois, por clipe
   var totalDur = 0;
@@ -534,8 +540,8 @@ function renderSilPreview(clips, silByFile, pad) {
     var ivs = (silByFile[cl.path] || []).slice().sort(function (x, y) { return x[0] - y[0]; });
     var cursor = cl.inP;
     for (var v = 0; v < ivs.length; v++) {
-      var s0 = Math.max(ivs[v][0] + pad, cl.inP + EDGE_GUARD);
-      var s1 = Math.min(ivs[v][1] - pad, cl.outP - EDGE_GUARD);
+      var s0 = Math.max(ivs[v][0] + padStart, cl.inP + EDGE_GUARD);
+      var s1 = Math.min(ivs[v][1] - padEnd, cl.outP - EDGE_GUARD);
       if (s1 - s0 < 0.2 || s0 < cursor) continue;
       if (s0 > cursor) segs.push({ type: 'keep', dur: s0 - cursor });
       segs.push({ type: 'cut', dur: s1 - s0 });
@@ -564,7 +570,7 @@ function renderSilPreview(clips, silByFile, pad) {
 
   silPreviewEl.classList.remove('hidden');
   drawFlatBar(silPreviewBar, merged, totalDur); // instantâneo — só cor, sem forma ainda
-  updateSilWaveform(clipMeta, totalDur); // assíncrono — decodifica o áudio e desenha a onda real por cima
+  scheduleWaveformUpdate(clipMeta, totalDur); // debounce 250ms — redesenha só após pausa no resize
 
   var pctCut = totalDur > 0 ? Math.round((totalCut / totalDur) * 100) : 0;
   silPreviewStats.textContent = clips.length + ' clipe(s) · ' + nCuts + ' silêncio(s) detectado(s) — fica ' +
@@ -612,6 +618,17 @@ function drawWaveform(canvas, buckets) {
 }
 
 var waveformToken = 0; // invalida passadas antigas quando o usuário muda os campos de novo no meio do caminho
+var waveformResizeTimer = null; // debounce: redimensionamento do painel não travará o canvas
+
+// Agenda redesenho do waveform após o usuário parar de redimensionar o painel.
+// O debounce de 250ms evita múltiplos FFmpeg simultâneos (1 por pixel de resize).
+function scheduleWaveformUpdate(clipMeta, totalDur) {
+  if (waveformResizeTimer) clearTimeout(waveformResizeTimer);
+  waveformResizeTimer = setTimeout(function () {
+    waveformResizeTimer = null;
+    updateSilWaveform(clipMeta, totalDur);
+  }, 250);
+}
 
 async function updateSilWaveform(clipMeta, totalDur) {
   var myToken = ++waveformToken;
@@ -672,12 +689,14 @@ async function previewSilences() {
   if (!nodeRequire) { hideSilPreview(); return; }
   var db = parseFloat(silDbInput.value);
   var dur = parseFloat(silDurInput.value);
-  var pad = parseFloat(silPadInput.value);
+  var padStart = parseFloat(silPadStartInput.value);
+  var padEnd = parseFloat(silPadEndInput.value);
   if (isNaN(db) || db >= 0 || isNaN(dur) || dur < 0.1) {
     showSilPreviewMsg('Ajuste Limiar (negativo) e Mín. (≥ 0.1s) pra ver o preview.');
     return;
   }
-  if (isNaN(pad) || pad < 0) pad = 0;
+  if (isNaN(padStart) || padStart < 0) padStart = 0;
+  if (isNaN(padEnd) || padEnd < 0) padEnd = 0;
 
   try {
     var loaded = await ensureJsxLoaded();
@@ -707,7 +726,7 @@ async function previewSilences() {
       showSilPreviewMsg('⚠️ Preview falhou em todos os arquivos — veja o console (F12 no painel) ou tente 1️⃣ Analisar.');
       return;
     }
-    renderSilPreview(collected.clips, silByFile, pad);
+    renderSilPreview(collected.clips, silByFile, { start: padStart, end: padEnd });
   } catch (eTop) {
     try { console.error('[GAMA preview] erro geral:', eTop); } catch (eC2) {}
     showSilPreviewMsg('⚠️ Preview falhou: ' + (eTop && eTop.message ? eTop.message : String(eTop)));
@@ -746,15 +765,17 @@ async function analyzeSilences() {
   }
   var db = parseFloat(silDbInput.value);
   var dur = parseFloat(silDurInput.value);
-  var pad = parseFloat(silPadInput.value);
+  var padStart = parseFloat(silPadStartInput.value);
+  var padEnd = parseFloat(silPadEndInput.value);
   if (isNaN(db) || db >= 0) { log('❌ Limiar deve ser negativo (ex.: -40).', 'error'); return; }
   if (isNaN(dur) || dur < 0.1) { log('❌ Duração mínima: pelo menos 0.1s.', 'error'); return; }
-  if (isNaN(pad) || pad < 0) pad = 0;
+  if (isNaN(padStart) || padStart < 0) padStart = 0;
+  if (isNaN(padEnd) || padEnd < 0) padEnd = 0;
 
   setBusy(true);
   cancelRequested = false;
   showProgress(true);
-  log('⏳ Analisando silêncios (limiar ' + db + 'dB, mín ' + dur + 's, margem ' + pad + 's)…');
+  log('⏳ Analisando silêncios (limiar ' + db + 'dB, mín ' + dur + 's, margem início ' + padStart + 's / fim ' + padEnd + 's)…');
   try {
     var loaded = await ensureJsxLoaded();
     if (!loaded) return;
@@ -808,8 +829,8 @@ async function analyzeSilences() {
       var cl = clips[ci];
       var ivs = silByFile[cl.path] || [];
       for (var vi = 0; vi < ivs.length; vi++) {
-        var s0 = Math.max(ivs[vi][0] + pad, cl.inP + EDGE_GUARD);
-        var s1 = Math.min(ivs[vi][1] - pad, cl.outP - EDGE_GUARD);
+        var s0 = Math.max(ivs[vi][0] + padStart, cl.inP + EDGE_GUARD);
+        var s1 = Math.min(ivs[vi][1] - padEnd, cl.outP - EDGE_GUARD);
         if (s1 - s0 < 0.2) continue; // sobra pequena demais pra valer o corte
         var a = cl.start + (s0 - cl.inP);
         var b = cl.start + (s1 - cl.inP);
@@ -819,7 +840,7 @@ async function analyzeSilences() {
       }
     }
     mergePlan('s', plan); // atualiza os silêncios no plano, preserva cortes da IA
-    renderSilPreview(clips, silByFile, pad); // mesmos dados já calculados, sem custo extra
+    renderSilPreview(clips, silByFile, { start: padStart, end: padEnd }); // mesmos dados já calculados, sem custo extra
 
     if (!plan.length) {
       log('✅ Nenhum silêncio encontrado com esses parâmetros. Tente limiar maior (ex.: -35) ou duração menor.', 'success');
@@ -966,7 +987,18 @@ btnSilAnalyze.addEventListener('click', function () {
 
 silDbInput.addEventListener('input', schedulePreview);
 silDurInput.addEventListener('input', schedulePreview);
-silPadInput.addEventListener('input', schedulePreview);
+
+// espelhamento amigável: mexer só na margem de início também ajusta a de fim
+// (mesma experiência do controle antigo). Mexer na fim "destrava" e ambas
+// passam a ser independentes até o reload do painel.
+silPadStartInput.addEventListener('input', function () {
+  if (silPadEndInput.dataset.touched !== '1') silPadEndInput.value = silPadStartInput.value;
+  schedulePreview();
+});
+silPadEndInput.addEventListener('input', function () {
+  silPadEndInput.dataset.touched = '1';
+  schedulePreview();
+});
 
 // ⚡ análise combinada: silêncios + falas repetidas, um clique
 btnAnalyzeAll.addEventListener('click', async function () {
@@ -1268,31 +1300,9 @@ async function aiAnalyze() {
     var loaded = await ensureJsxLoaded();
     if (!loaded) return;
 
-    var res = String(await evalScriptP("gamaSilenceCollect('selected')") || '');
-    if (res.indexOf('OK:') !== 0) {
-      log('❌ ' + res.replace('ERR:', ''), 'error');
-      return;
-    }
-    var lines = res.substring(3).split('\n');
-    var clips = [];
-    for (var i = 1; i < lines.length; i++) {
-      var p = lines[i].split('|');
-      if (p[0] !== 'CLIP' || p.length < 9) continue;
-      var spRaw = parseFloat(p[7]);
-      var speedPct = spRaw > 10 ? spRaw : spRaw * 100;
-      var clip = {
-        t: parseInt(p[1], 10),
-        c: parseInt(p[2], 10),
-        start: parseFloat(p[3]),
-        end: parseFloat(p[4]),
-        inP: parseFloat(p[5]),
-        outP: parseFloat(p[6]),
-        path: p.slice(8).join('|')
-      };
-      if (!clip.path || clip.path === 'undefined' || clip.path === 'null') continue;
-      if (Math.abs(speedPct - 100) > 0.5) continue;
-      clips.push(clip);
-    }
+    var collected = await collectSelectedClips(true);
+    if (!collected) return;
+    var clips = collected.clips;
     if (!clips.length) {
       log('❌ Nenhum clipe analisável selecionado.', 'error');
       return;
@@ -1468,31 +1478,9 @@ async function roteiroAnalyze() {
     var loaded = await ensureJsxLoaded();
     if (!loaded) return;
 
-    var res = String(await evalScriptP("gamaSilenceCollect('selected')") || '');
-    if (res.indexOf('OK:') !== 0) {
-      log('❌ ' + res.replace('ERR:', ''), 'error');
-      return;
-    }
-    var lines = res.substring(3).split('\n');
-    var clips = [];
-    for (var i = 1; i < lines.length; i++) {
-      var p = lines[i].split('|');
-      if (p[0] !== 'CLIP' || p.length < 9) continue;
-      var spRaw = parseFloat(p[7]);
-      var speedPct = spRaw > 10 ? spRaw : spRaw * 100;
-      var clip = {
-        t: parseInt(p[1], 10),
-        c: parseInt(p[2], 10),
-        start: parseFloat(p[3]),
-        end: parseFloat(p[4]),
-        inP: parseFloat(p[5]),
-        outP: parseFloat(p[6]),
-        path: p.slice(8).join('|')
-      };
-      if (!clip.path || clip.path === 'undefined' || clip.path === 'null') continue;
-      if (Math.abs(speedPct - 100) > 0.5) continue;
-      clips.push(clip);
-    }
+    var collected = await collectSelectedClips(true);
+    if (!collected) return;
+    var clips = collected.clips;
     if (!clips.length) {
       log('❌ Nenhum clipe analisável selecionado.', 'error');
       return;
@@ -1823,7 +1811,7 @@ btnSilCutAll.addEventListener('click', async function () {
 
 // ---------- init ----------
 (async function init() {
-  log('Painel v1.27 carregado (waveform real no preview de silêncio)', 'success');
+  log('Painel v1.33 carregado (debug: log cada iv + áudio pulando)', 'success');
   log(nodeRequire ? 'Node.js ativo ✔ (FFmpeg disponível)' : '⚠️ Node.js inativo — reinicie o Premiere pra ativar o Remover Silêncios', nodeRequire ? 'success' : 'error');
   var loaded = await ensureJsxLoaded();
   if (loaded) {

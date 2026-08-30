@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<ExtensionManifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ExtensionBundleId="com.gama.macros" ExtensionBundleName="GAMA Macros" ExtensionBundleVersion="1.0.0" Version="6.0">
+<ExtensionManifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ExtensionBundleId="com.gama.macros" ExtensionBundleName="GAMA Macros" ExtensionBundleVersion="1.33.0" Version="6.0">
   <ExtensionList>
-    <Extension Id="com.gama.macros.panel" Version="1.0.0"/>
+    <Extension Id="com.gama.macros.panel" Version="1.33.0"/>
   </ExtensionList>
   <ExecutionEnvironment>
     <HostList>

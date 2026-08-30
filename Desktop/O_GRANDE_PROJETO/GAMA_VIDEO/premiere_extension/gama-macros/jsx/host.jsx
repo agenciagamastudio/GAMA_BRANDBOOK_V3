@@ -7,12 +7,32 @@
  * (sem depender de JSON, que não é garantido no ExtendScript)
  */
 
+
+/* ============================================================
+ * NAMESPACE GAMA (v1.33.0) — isola variáveis globais, padroniza
+ * retornos JSON/struct e envolve chamadas QE DOM em try/catch.
+ * ============================================================ */
+var GAMA = GAMA || {};
+
+GAMA.ping = function () {
+  try { return { success: true, data: 'pong', v: '1.33.0', protocol: 'JSON' }; } catch (e) { return { success: false, error: String(e), v: '1.33.0' }; }
+};
+
+GAMA.version = function () {
+  try { return '1.33.0'; } catch (e) { return { success: false, error: String(e) }; }
+};
+
+/* ============================================================
+ * PROTOCOLO DE RETORNO PADRONIZADO (Fase 1 — v1.33.0)
+ * Todas as chamadas de macros devem retornar: { success, data?, error? }
+ * ou a convenção legada 'OK:...'/ 'ERR:...' quando chamado direto.
+ * ============================================================ */
 function gamaPing() {
   return 'pong';
 }
 
 function gamaVersion() {
-  return '1.25.0';
+  return { success: true, v: '1.33.0', protocol: 'JSON', lang: 'pt-BR' };
 }
 
 var GAMA_TPS = 254016000000; // ticks por segundo (constante do Premiere)
@@ -793,8 +813,11 @@ function gamaCutExperiment(vt, a, b, outPath) {
       out.push('A' + (x + 1) + ': QE track indisponível — áudio NÃO cortado!');
       continue;
     }
-    _gamaQeRazorMeasured(seq, qeATrack, aTrack, bx, out);
-    _gamaQeRazorMeasured(seq, qeATrack, aTrack, ax, out);
+    var razorBx = _gamaQeRazorMeasured(seq, qeATrack, aTrack, bx, out);
+    var razorAx = _gamaQeRazorMeasured(seq, qeATrack, aTrack, ax, out);
+    if (razorBx === null || razorAx === null) {
+      out.push('A' + (x + 1) + ': razor de áudio FALHOU para [' + ax.toFixed(2) + ' → ' + bx.toFixed(2) + ']s');
+    }
   }
 
   dumpState('APOS RAZORS');
@@ -827,14 +850,15 @@ function _gamaTrackLastEnd(track) {
 }
 
 function _gamaFindClipAt(track, s, e) {
+  // Fase 1 (v1.33.0): intersecção parcial — clipe intersecta [s,e] em qualquer ponto.
+  // Corrige bug >60s com A/V desvinculado (clipe de áudio com duração diferente).
   var n = _gamaCount(track ? track.clips : null);
   for (var i = 0; i < n; i++) {
-    var cs = -1;
-    var ce = -1;
-    try {
-      cs = track.clips[i].start.seconds;
-      ce = track.clips[i].end.seconds;
-    } catch (ex) {}
+    var cs = -1; var ce = -1;
+    try { cs = track.clips[i].start.seconds; ce = track.clips[i].end.seconds; } catch (ex) {}
+    // Intersecção parcial: clipe começa antes de e E termina depois de s
+    if (cs < e - 0.005 && ce > s + 0.005) return i;
+    // Fallback: match exato (para remoção precisa de pedaço)
     if (Math.abs(cs - s) < 0.005 && Math.abs(ce - e) < 0.005) return i;
   }
   return -1;
@@ -1025,7 +1049,25 @@ function _gamaCutCore(seq, qeSeq, vt, ax, bx, report) {
   for (var x = 0; x < nA; x++) {
     var aT = seq.audioTracks[x];
     if (!aT) continue;
-    if (_gamaFindClipAt(aT, ax, bx) >= 0) {
+    // Fix 2026-07-29: bug "corte >60s só afeta vídeo". Causa-raiz: a checagem anterior
+    // exigia um ÚNICO clipe de áudio cobrindo [ax,bx] inteiro. Com áudio/vídeo
+    // separados (não-linkados) e sincronizados manualmente, é comum que o clipe de
+    // áudio tenha duração diferente (termina antes de bx, ou começa depois de ax) —
+    // nesse caso _gamaFindClipAt falhava e a track era pulada, enquanto o vídeo
+    // cortava normal. Solução: contar clipes que INTERSECTAM [ax,bx] em qualquer
+    // ponto — se ao menos 1 intersecta, a track é marcada como afetada e o
+    // _gamaRemovePiece tenta remover (ele tem 6 estratégias em fallback).
+    var nC = _gamaCount(aT.clips);
+    var intersecting = 0;
+    for (var c = 0; c < nC; c++) {
+      var cs = -1, ce = -1;
+      try {
+        cs = aT.clips[c].start.seconds;
+        ce = aT.clips[c].end.seconds;
+      } catch (eC) {}
+      if (cs < bx - 0.001 && ce > ax + 0.001) intersecting++;
+    }
+    if (intersecting > 0) {
       var errA = _gamaRemovePiece(seq, qeSeq, 'a', x, ax, bx, report);
       if (errA) return 'A' + (x + 1) + ': ' + errA;
       audioTracksHit.push(x);
@@ -1064,6 +1106,13 @@ function _gamaCutOne(seq, qeSeq, vt, a, b) {
   }
 
   // áudio: fatia nas mesmas posições medidas as tracks que cruzam [ax,bx]
+  // Fix 2026-07-27: corte silêncio >60s afetava só vídeo porque o razor do áudio
+  // usava _gamaQeRazorMeasured que retorna null em falha silenciosamente (ex.:
+  // QE API bug em audioTrack.razor() para timecode ≥60s). Caller antigo
+  // descartava o retorno — áudio ficava intacto enquanto vídeo era cortado.
+  // Solução: replicar o padrão do motor 3-fases (gamaCut2Start → linhas
+  // 1520-1521) que usa _gamaRazorFast (com fallback interno pra
+  // _gamaQeRazorMeasured) e captura o retorno pra detectar + logar falha.
   var nA = _gamaCount(seq.audioTracks);
   for (var x = 0; x < nA; x++) {
     var aTrack = seq.audioTracks[x];
@@ -1088,8 +1137,11 @@ function _gamaCutOne(seq, qeSeq, vt, a, b) {
       qeA = qeSeq.getAudioTrackAt(x);
     } catch (e2) {}
     if (!qeA) continue;
-    _gamaQeRazorMeasured(seq, qeA, aTrack, bx, null);
-    _gamaQeRazorMeasured(seq, qeA, aTrack, ax, null);
+    var razorBx = _gamaRazorFast(seq, qeA, aTrack, bx);
+    var razorAx = _gamaRazorFast(seq, qeA, aTrack, ax);
+    if (razorBx === null || razorAx === null) {
+      $.writeln('[GAMA] razor áudio falhou em t=' + bx.toFixed(2) + '/' + ax.toFixed(2) + 's (track A' + (x + 1) + ')');
+    }
   }
 
   // remove os meios (vídeo + áudio) e fecha os buracos com moves verificados
@@ -1276,7 +1328,12 @@ function _gamaClipIdxNear(track, t) {
 function _gamaSpansFast(track, ax, bx) {
   var c = _gamaClipIdxNear(track, ax + 0.001);
   if (c.i < 0) return false;
-  return c.s <= ax + 0.001 && c.e >= bx - 0.001;
+  // Fix 2026-07-29: a checagem original exigia 1 clipe cobrindo [ax,bx] INTEIRO
+  // (c.s <= ax && c.e >= bx). Com áudio/vídeo separados não-linkados e durações
+  // diferentes, o clipe de áudio normalmente não cobre a janela inteira e a track
+  // era pulada silenciosamente. Correto: o clipe intersecta a janela em qualquer
+  // ponto (c.s < bx && c.e > ax). Vídeo já cortou; áudio deve cortar também.
+  return c.s < bx - 0.001 && c.e > ax + 0.001;
 }
 
 // Acha o clipe exatamente em [s,e] olhando só 3 candidatos
@@ -1491,10 +1548,15 @@ function gamaCut2Step(count) {
         continue;
       }
 
-      // fatia vídeo
-      var bx = _gamaRazorFast(seq, qeV, domV, iv.b);
-      var ax = _gamaRazorFast(seq, qeV, domV, iv.a);
+      // fatia vídeo (Fix 2026-07-29: usar _gamaQeRazorMeasured direto que é mais robusto
+      // e captura métricas confiáveis. _gamaRazorFast estava falhando silenciosamente
+      // em timecodes >60s — log mostrava "razor falhou em [...]" sem detalhes)
+      var bx = _gamaQeRazorMeasured(seq, qeV, domV, iv.b,  null);
+      var ax = _gamaQeRazorMeasured(seq, qeV, domV, iv.a, null);
       if (ax === null || bx === null || !(bx - ax > 0.05)) {
+        var nC = (function(){var x=null;try{x=_gamaCount(domV.clips);}catch(e){}return x;})();
+        $.writeln('[GAMA] razor V' + (iv.t + 1) + ' falhou em [' + iv.a.toFixed(2) + '-' + iv.b.toFixed(2) + ']. ' +
+                  'ax=' + (ax===null?'null':ax.toFixed(2)) + ' bx=' + (bx===null?'null':bx.toFixed(3)) + ' cl=' + nC);
         S.fail++;
         if (!S.firstErr) S.firstErr = 'razor falhou em [' + iv.a.toFixed(2) + '-' + iv.b.toFixed(2) + ']';
         continue;
@@ -1517,12 +1579,17 @@ function gamaCut2Step(count) {
         var aT = aDom[x];
         if (!aT || !aQe[x]) continue;
         if (!_gamaSpansFast(aT, ax, bx)) continue;
-        _gamaRazorFast(seq, aQe[x], aT, bx);
-        _gamaRazorFast(seq, aQe[x], aT, ax);
+        var razorBx = _gamaRazorFast(seq, aQe[x], aT, bx);
+        var razorAx = _gamaRazorFast(seq, aQe[x], aT, ax);
+        if (razorBx === null || razorAx === null) {
+          $.writeln('[GAMA] razor áudio falhou em t=' + bx.toFixed(2) + '/' + ax.toFixed(2) + 's (motor 2-fases, track A' + (x + 1) + ')');
+        }
         iv.aud.push(x);
       }
 
       // exclui na hora (track volta ao tamanho de antes)
+      // Log: rastreia cada intervalo sendo processado para diagnóstico
+      $.writeln('[GAMA] iv ' + S.pos + '/' + S.iv.length + ': track V' + (iv.t + 1) + ' [' + ax.toFixed(2) + '-' + bx.toFixed(2) + '] (orig ' + iv.a.toFixed(2) + '-' + iv.b.toFixed(2) + ') aud=' + iv.aud.length);
       var errV = _gamaRemovePiece(seq, qeSeq, 'v', iv.t, ax, bx, null, domV, qeV);
       if (errV) {
         iv.ok = false;
@@ -1530,13 +1597,70 @@ function gamaCut2Step(count) {
         if (!S.firstErr) S.firstErr = 'video: ' + errV;
         continue;
       }
+      // VALIDA remoção do vídeo: _gamaRemovePiece pode retornar null sem ter realmente
+      // removido (clipe fantasma + edge cases). Confirma que não há mais clipe nesta janela.
+      var stillHasV = false;
+      try {
+        var nCk = _gamaCount(domV.clips);
+        for (var vk = 0; vk < nCk; vk++) {
+          var vks = domV.clips[vk].start.seconds;
+          var vke = domV.clips[vk].end.seconds;
+          if (vks < bx - 0.005 && vke > ax + 0.005) { stillHasV = true; break; }
+        }
+      } catch (eVk) {}
+      if (stillHasV) {
+        iv.ok = false;
+        S.fail++;
+        if (!S.firstErr) S.firstErr = 'video: removePiece retornou OK mas clipe ainda em [' + ax.toFixed(2) + '-' + bx.toFixed(2) + ']';
+        $.writeln('[GAMA] ALERTA: V' + (iv.t + 1) + ' REPORTANDO remoção OK mas ainda há clipe na janela');
+        continue;
+      }
+      // áudio: remove o que intersecta a janela — NUNCA só "o que está EXATO em [ax,bx]"
+      // (pode haver drift NTSC de 0.1% que afasta o clipe por milissegundos)
+      var audioOk = true;
+      var pendingAud = [];
       for (var y = 0; y < iv.aud.length; y++) {
-        var ai = iv.aud[y];
-        if (_gamaFindClipAtFast(aDom[ai], ax, bx) >= 0) {
-          _gamaRemovePiece(seq, qeSeq, 'a', ai, ax, bx, null, aDom[ai], aQe[ai]);
+        pendingAud.push(iv.aud[y]);
+      }
+      for (var y2 = 0; y2 < iv.aud.length; y2++) {
+        var ai = iv.aud[y2];
+        var aTrk = aDom[ai];
+        if (!aTrk) continue;
+        // ao invés de exigir clip EXATO em [ax,bx], procura QUALQUER clipe intersectando
+        var inter = false;
+        var interIdx = -1;
+        try {
+          var nCk2 = _gamaCount(aTrk.clips);
+          for (var ak = 0; ak < nCk2; ak++) {
+            var aks = aTrk.clips[ak].start.seconds;
+            var ake = aTrk.clips[ak].end.seconds;
+            if (aks < bx - 0.005 && ake > ax + 0.005) { inter = true; interIdx = ak; break; }
+          }
+        } catch (eAk) {}
+        if (!inter) {
+          $.writeln('[GAMA] iv ' + S.pos + ': áudio A' + (ai + 1) + ' NÃO intersecta [' + ax.toFixed(2) + '-' + bx.toFixed(2) + '] — pulando');
+          continue;
+        }
+        // clip intersecta — tenta remover EXATAMENTE no clipe idx interIdx
+        var errA = _gamaRemovePiece(seq, qeSeq, 'a', ai, ax, bx, null, aDom[ai], aQe[ai]);
+        if (errA) {
+          $.writeln('[GAMA] áudio A' + (ai + 1) + ' remove falhou em [' + ax.toFixed(2) + '-' + bx.toFixed(2) + ']: ' + errA);
+          audioOk = false;
+        } else {
+          // valida: o clipe interIdx deve ter sumido. Se não sumiu, força remoção genérica.
+          var stillHasA = false;
+          try {
+            var aks2 = aTrk.clips[interIdx].start.seconds;
+            var ake2 = aTrk.clips[interIdx].end.seconds;
+            if (aks2 < bx - 0.005 && ake2 > ax + 0.005) stillHasA = true;
+          } catch (eSx) {}
+          if (stillHasA) {
+            $.writeln('[GAMA] ALERTA: A' + (ai + 1) + ' REPORTANDO remoção OK mas ainda há clipe na janela');
+            audioOk = false;
+          }
         }
       }
-      iv.ok = true;
+      iv.ok = audioOk;
     }
     if (S.pos >= S.iv.length) {
       S.jobs = _gamaPhase3Build(seq);
