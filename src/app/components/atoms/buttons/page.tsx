@@ -1,3 +1,6 @@
+"use client";
+
+import { useLang } from "@/components/layout/LanguageProvider";
 import PageLayout from "@/components/layout/PageLayout";
 
 const VARIANTS = [
@@ -22,11 +25,12 @@ const STATES = [
 ];
 
 export default function ButtonsPage() {
+  const { t } = useLang();
   return (
     <PageLayout
-      title="Buttons"
-      accentWord="Buttons"
-      subtitle="Botões são a unidade de ação do sistema. 5 variantes, 3 tamanhos, todos os estados — todos tokenizados."
+      title={t("buttons")}
+      accentWord={t("buttons")}
+      subtitle={t("buttons_subtitle")}
       breadcrumb={[
         { label: "Components", href: "/components/atoms/buttons" },
         { label: "Atoms", href: "/components/atoms/buttons" },

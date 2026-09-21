@@ -1,4 +1,6 @@
+"use client";
 import PageLayout from "@/components/layout/PageLayout";
+import { useLang } from "@/components/layout/LanguageProvider";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc?: string }) {
   return (
@@ -11,11 +13,12 @@ function SectionHeader({ number, title, desc }: { number: string; title: string;
 }
 
 export default function PageHeadersPage() {
+  const { t } = useLang();
   return (
-    <PageLayout 
-      title="Page Headers" 
-      accentWord="Page Headers" 
-      subtitle="Cabeçalhos de página estabelecem contexto e hierarquia. 4 variantes — simples, com breadcrumb, com ações e com tabs." 
+    <PageLayout
+      title={t("page_headers")}
+      accentWord={t("page_headers")}
+      subtitle={t("page_headers_desc")} 
       breadcrumb={[
         { label: "Components", href: "/components" },
         { label: "Organisms", href: "/components/organisms/tables" },

@@ -99,6 +99,17 @@ const SECTIONS: NavSection[] = [
       { label: "Tokens", href: "/tokens" },
     ],
   },
+  {
+    id: "templates",
+    title: "TEMPLATES",
+    items: [
+      { label: "Explanation Template", href: "/templates/explanation-template" },
+      { label: "Landing Page", href: "/templates/landing-page" },
+      { label: "Dashboard", href: "/templates/dashboard" },
+      { label: "Medical Clinic", href: "/templates/medical-clinic" },
+      { label: "Social Agency", href: "/templates/social-agency" },
+    ],
+  },
 ];
 
 function SunIcon() {
@@ -150,6 +161,7 @@ export default function Sidebar() {
     foundations: true,
     components: true,
     developer: true,
+    templates: true,
   });
   const [isPinned, setIsPinned] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -230,24 +242,31 @@ export default function Sidebar() {
         position: "sticky",
         top: 0,
         zIndex: 40,
-        transition: "width 0.3s ease-out, background 0.3s ease-out",
+        transition: "width 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
         overflow: "hidden",
       }}
     >
       {/* Header / Brand */}
       <div
         style={{
-          padding: "20px 16px 16px",
+          padding: isExpanded ? "20px 16px 16px" : "16px 12px",
           borderBottom: "1px solid var(--color-border)",
           display: "flex",
           flexDirection: "column",
-          gap: 14,
+          gap: isExpanded ? 14 : 12,
           whiteSpace: "nowrap",
-          transition: "opacity 0.3s ease-out",
+          transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+          alignItems: isExpanded ? "flex-start" : "center",
         }}
       >
-        {/* Top bar: Logo + Pin button */}
-        <div style={{ display: "flex", alignItems: "center", gap: 10, justifyContent: "space-between" }}>
+        {/* Top bar: Logo only when minimized, Logo + Pin when expanded */}
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          gap: isExpanded ? 10 : 0,
+          justifyContent: isExpanded ? "space-between" : "center",
+          width: "100%",
+        }}>
           <Link
             href="/"
             style={{
@@ -255,7 +274,8 @@ export default function Sidebar() {
               alignItems: "center",
               gap: 10,
               textDecoration: "none",
-              opacity: isExpanded ? 1 : 0.7,
+              opacity: isExpanded ? 1 : 0.9,
+              transition: "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
           >
             <div
@@ -279,7 +299,15 @@ export default function Sidebar() {
               />
             </div>
             {isExpanded && (
-              <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  lineHeight: 1.1,
+                  opacity: isExpanded ? 1 : 0,
+                  transition: "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+                }}
+              >
                 <span
                   style={{
                     fontWeight: 800,
@@ -305,31 +333,46 @@ export default function Sidebar() {
             )}
           </Link>
 
-          {/* Pin button - always visible */}
-          <button
-            onClick={togglePin}
-            className="btn btn-ghost btn-sm"
-            style={{
-              padding: "6px 8px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
-            }}
-            aria-label={isPinned ? "Desafixar sidebar" : "Afixar sidebar"}
-            title={isPinned ? "Sidebar fixada" : "Afixar sidebar"}
-          >
-            <PinIcon filled={isPinned} />
-          </button>
+          {/* Pin button - only visible when expanded */}
+          {isExpanded && (
+            <button
+              onClick={togglePin}
+              className="btn btn-ghost btn-sm"
+              style={{
+                padding: "6px 8px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+                opacity: isExpanded ? 1 : 0,
+                transition: "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+              }}
+              aria-label={isPinned ? "Desafixar sidebar" : "Afixar sidebar"}
+              title={isPinned ? "Sidebar fixada" : "Afixar sidebar"}
+            >
+              <PinIcon filled={isPinned} />
+            </button>
+          )}
         </div>
 
         {/* Theme + Lang toggle - only visible when expanded */}
         {isExpanded && (
-          <div style={{ display: "flex", gap: 6 }}>
+          <div
+            style={{
+              display: "flex",
+              gap: 6,
+              opacity: isExpanded ? 1 : 0,
+              transition: "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+            }}
+          >
             <button
               onClick={toggleTheme}
               className="btn btn-ghost btn-sm"
-              style={{ flex: 1, padding: "6px 8px" }}
+              style={{
+                flex: 1,
+                padding: "6px 8px",
+                transition: "background 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+              }}
               aria-label="Toggle theme"
               title={theme === "dark" ? "Modo escuro" : "Modo claro"}
             >
@@ -339,7 +382,12 @@ export default function Sidebar() {
             <button
               onClick={toggleLang}
               className="btn btn-ghost btn-sm"
-              style={{ flex: 1, padding: "6px 8px", fontSize: 11 }}
+              style={{
+                flex: 1,
+                padding: "6px 8px",
+                fontSize: 11,
+                transition: "background 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+              }}
               aria-label="Toggle language"
             >
               {lang === "pt" ? "PT | en" : "pt | EN"}
@@ -359,6 +407,8 @@ export default function Sidebar() {
               border: "1px solid var(--color-border)",
               borderRadius: 10,
               color: "var(--color-text-muted)",
+              opacity: isExpanded ? 1 : 0,
+              transition: "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
           >
             <SearchIcon />
@@ -413,7 +463,7 @@ export default function Sidebar() {
                     gap: 8,
                     padding: "8px 12px",
                     borderRadius: 6,
-                    transition: "background 0.2s ease-out",
+                    transition: "background 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
                     backgroundColor: isCollapsed ? "transparent" : "rgba(255,255,255,0.04)",
                   }}
                 >
@@ -426,7 +476,7 @@ export default function Sidebar() {
                         display: "flex",
                         alignItems: "center",
                         transform: isCollapsed ? "rotate(-90deg)" : "rotate(0deg)",
-                        transition: "transform 0.2s ease-out",
+                        transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
                         color: "var(--color-text-muted)",
                       }}
                     >
@@ -448,6 +498,7 @@ export default function Sidebar() {
                         opacity: isExpanded ? 1 : 0.6,
                         minWidth: 0,
                         paddingLeft: isExpanded ? 12 : 8,
+                        transition: "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), padding 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
                       }}
                     >
                       {isExpanded ? item.label : item.label.substring(0, 1)}
@@ -480,7 +531,7 @@ export default function Sidebar() {
                               gap: 6,
                               userSelect: "none",
                               borderRadius: 4,
-                              transition: "background 0.2s ease-out",
+                              transition: "background 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
                               backgroundColor: subExpanded ? "rgba(136,206,17,0.08)" : "transparent",
                             }}
                           >
@@ -488,7 +539,7 @@ export default function Sidebar() {
                             <span
                               style={{
                                 transform: subExpanded ? "rotate(0)" : "rotate(-90deg)",
-                                transition: "transform 0.2s ease-out",
+                                transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
                                 display: "flex",
                                 alignItems: "center",
                                 color: "var(--color-text-muted)",
@@ -506,8 +557,8 @@ export default function Sidebar() {
                                 style={{
                                   paddingLeft: 24,
                                   fontSize: 12,
-                                  transition: "all 0.2s ease-out",
-                                  animation: "fadeIn 0.2s ease-out",
+                                  transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+                                  animation: "fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
                                 }}
                               >
                                 {item.label}

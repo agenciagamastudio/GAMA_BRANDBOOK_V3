@@ -1,14 +1,53 @@
 "use client";
 
+import dynamic from "next/dynamic";
+import { useLang } from "@/components/layout/LanguageProvider";
 import PageLayout from "@/components/layout/PageLayout";
-import ParticleField from "@/components/ui/ParticleField";
+
+const LoadingPlaceholder = () => (
+  <div className="w-full h-96 bg-gradient-to-b from-slate-900 to-slate-950 rounded-2xl animate-pulse" />
+);
+
+const ParticleField = dynamic(() => import("@/components/ui/ParticleField"), {
+  ssr: false,
+  loading: LoadingPlaceholder,
+});
+const ParticleFieldRain = dynamic(() => import("@/components/ui/ParticleFieldRain"), {
+  ssr: false,
+  loading: LoadingPlaceholder,
+});
+const ParticleFieldOrbits = dynamic(() => import("@/components/ui/ParticleFieldOrbits"), {
+  ssr: false,
+  loading: LoadingPlaceholder,
+});
+const ParticleFieldBurst = dynamic(() => import("@/components/ui/ParticleFieldBurst"), {
+  ssr: false,
+  loading: LoadingPlaceholder,
+});
+const ParticleFieldWaves = dynamic(() => import("@/components/ui/ParticleFieldWaves"), {
+  ssr: false,
+  loading: LoadingPlaceholder,
+});
+const ParticleFieldWindFlow = dynamic(() => import("@/components/ui/ParticleFieldWindFlow"), {
+  ssr: false,
+  loading: LoadingPlaceholder,
+});
+const ParticleFieldPulse = dynamic(() => import("@/components/ui/ParticleFieldPulse"), {
+  ssr: false,
+  loading: LoadingPlaceholder,
+});
+const ParticleFieldGridPulse = dynamic(() => import("@/components/ui/ParticleFieldGridPulse"), {
+  ssr: false,
+  loading: LoadingPlaceholder,
+});
 
 export default function EffectsPage() {
+  const { t } = useLang();
   return (
     <PageLayout
-      title="Visual Effects Stack"
-      accentWord="Effects"
-      subtitle="Sistema visual técnico completo do GAMA DS V3: Glass Material, Liquid Glass, Volumetric Lighting, Shadows, Emissive Glow e Depth Layers."
+      title={t("effects")}
+      accentWord={t("effects")}
+      subtitle={t("color_system")}
       breadcrumb={[
         { label: "Foundations", href: "/foundations/colors" },
         { label: "Effects" },
@@ -887,6 +926,533 @@ export default function EffectsPage() {
 --depth-layer-2: 10;     /* Elevated */
 --depth-layer-3: 20;     /* High */
 --depth-layer-4: 100;    /* Topmost */`}
+          </pre>
+        </div>
+      </section>
+
+      {/* SECTION 7 — PARTICLE FIELD */}
+      <section style={{ marginBottom: 64 }}>
+        <SectionHeader
+          number="07"
+          title="Particle Field"
+          desc="Floating particle system with mouse interaction — creates atmospheric depth and engagement."
+        />
+        <div style={{ marginBottom: 40 }}>
+          {/* Preview */}
+          <ParticleField height={400} />
+          <p style={{ marginTop: 16, fontSize: 13, color: "var(--color-text-secondary)" }}>
+            💡 Hover sobre as partículas para interagir. O efeito responde dinamicamente ao mouse.
+          </p>
+        </div>
+
+        {/* Tokens */}
+        <div style={{ marginBottom: 40 }}>
+          <h3
+            style={{
+              fontSize: 16,
+              fontWeight: 700,
+              marginBottom: 16,
+              color: "var(--color-text)",
+            }}
+          >
+            Configuration Tokens
+          </h3>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: 16,
+            }}
+          >
+            {/* Token 1 */}
+            <div
+              style={{
+                background: "var(--color-surface-2)",
+                border: "1px solid var(--color-border)",
+                borderRadius: 12,
+                padding: 16,
+              }}
+            >
+              <p
+                style={{
+                  fontSize: 11,
+                  color: "var(--color-primary)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  margin: "0 0 8px",
+                }}
+              >
+                Particle Count
+              </p>
+              <p
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 18,
+                  fontWeight: 700,
+                  margin: "0 0 8px",
+                  color: "var(--color-text)",
+                }}
+              >
+                90
+              </p>
+              <p style={{ fontSize: 12, color: "var(--color-text-secondary)", margin: 0 }}>
+                Total particles floating. Increase for denser field, decrease for minimal.
+              </p>
+            </div>
+
+            {/* Token 2 */}
+            <div
+              style={{
+                background: "var(--color-surface-2)",
+                border: "1px solid var(--color-border)",
+                borderRadius: 12,
+                padding: 16,
+              }}
+            >
+              <p
+                style={{
+                  fontSize: 11,
+                  color: "var(--color-primary)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  margin: "0 0 8px",
+                }}
+              >
+                Speed Range
+              </p>
+              <p
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 18,
+                  fontWeight: 700,
+                  margin: "0 0 8px",
+                  color: "var(--color-text)",
+                }}
+              >
+                0.2 - 1.0
+              </p>
+              <p style={{ fontSize: 12, color: "var(--color-text-secondary)", margin: 0 }}>
+                Vertical drift speed (pixels/frame). Higher = faster upward float.
+              </p>
+            </div>
+
+            {/* Token 3 */}
+            <div
+              style={{
+                background: "var(--color-surface-2)",
+                border: "1px solid var(--color-border)",
+                borderRadius: 12,
+                padding: 16,
+              }}
+            >
+              <p
+                style={{
+                  fontSize: 11,
+                  color: "var(--color-primary)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  margin: "0 0 8px",
+                }}
+              >
+                Drift Range
+              </p>
+              <p
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 18,
+                  fontWeight: 700,
+                  margin: "0 0 8px",
+                  color: "var(--color-text)",
+                }}
+              >
+                ±0.4
+              </p>
+              <p style={{ fontSize: 12, color: "var(--color-text-secondary)", margin: 0 }}>
+                Horizontal sway. Creates organic, non-linear movement.
+              </p>
+            </div>
+
+            {/* Token 4 */}
+            <div
+              style={{
+                background: "var(--color-surface-2)",
+                border: "1px solid var(--color-border)",
+                borderRadius: 12,
+                padding: 16,
+              }}
+            >
+              <p
+                style={{
+                  fontSize: 11,
+                  color: "var(--color-primary)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  margin: "0 0 8px",
+                }}
+              >
+                Mouse Interaction
+              </p>
+              <p
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 18,
+                  fontWeight: 700,
+                  margin: "0 0 8px",
+                  color: "var(--color-text)",
+                }}
+              >
+                140px radius
+              </p>
+              <p style={{ fontSize: 12, color: "var(--color-text-secondary)", margin: 0 }}>
+                Distance at which particles respond to cursor. Increases opacity on hover.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Color Palette */}
+        <div style={{ marginBottom: 40 }}>
+          <h3
+            style={{
+              fontSize: 16,
+              fontWeight: 700,
+              marginBottom: 16,
+              color: "var(--color-text)",
+            }}
+          >
+            Color Tokens
+          </h3>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gap: 12,
+            }}
+          >
+            {[
+              {
+                color: "rgba(136, 206, 17, 1)",
+                name: "Primary Green (100%)",
+              },
+              {
+                color: "rgba(136, 206, 17, 0.85)",
+                name: "Primary Green (85%)",
+              },
+              {
+                color: "rgba(255, 255, 255, 0.6)",
+                name: "White (60%)",
+              },
+              {
+                color: "rgba(255, 255, 255, 0.4)",
+                name: "White (40%)",
+              },
+            ].map((token, i) => (
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 8,
+                }}
+              >
+                <div
+                  style={{
+                    width: "100%",
+                    height: 80,
+                    background: token.color,
+                    borderRadius: 12,
+                    border: "1px solid var(--color-border)",
+                  }}
+                />
+                <p
+                  style={{
+                    fontSize: 12,
+                    color: "var(--color-text-secondary)",
+                    margin: 0,
+                    textAlign: "center",
+                  }}
+                >
+                  {token.name}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Implementation */}
+        <div
+          style={{
+            background: "var(--color-surface-2)",
+            border: "1px solid var(--color-border)",
+            borderRadius: 12,
+            padding: 20,
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 12,
+              color: "var(--color-text-muted)",
+              margin: "0 0 12px",
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+            }}
+          >
+            Implementation
+          </p>
+          <pre
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 11,
+              color: "var(--color-primary)",
+              margin: 0,
+              overflow: "auto",
+              background: "rgba(0, 0, 0, 0.2)",
+              padding: 12,
+              borderRadius: 8,
+            }}
+          >
+{`import ParticleField from "@/components/ui/ParticleField";
+
+{/* Default (320px height) */}
+<ParticleField />
+
+{/* Custom height */}
+<ParticleField height={400} />
+
+{/* Configuration */}
+const particles = {
+  count: 90,
+  speedY: [0.2, 1.0],
+  drift: [-0.4, 0.4],
+  sizeRange: [1, 4],
+  opacity: [0.3, 0.8],
+  colors: ["rgba(136,206,17,1)", "rgba(255,255,255,0.6)"]
+};`}
+          </pre>
+        </div>
+      </section>
+
+      {/* SECTION 8 — PARTICLE FIELD VARIATIONS (WAVES) */}
+      <section style={{ marginBottom: 64 }}>
+        <SectionHeader
+          number="08"
+          title="Particle Field: Waves"
+          desc="Sinusoidal wave pattern — particles move horizontally while oscillating up and down."
+        />
+        <div style={{ marginBottom: 40 }}>
+          <ParticleFieldWaves height={400} />
+          <p style={{ marginTop: 16, fontSize: 13, color: "var(--color-text-secondary)" }}>
+            💡 Partículas em movimento ondulatório sincronizado. Ótimo para efeito de fluxo contínuo.
+          </p>
+        </div>
+        <div
+          style={{
+            background: "var(--color-surface-2)",
+            border: "1px solid var(--color-border)",
+            borderRadius: 12,
+            padding: 20,
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 12,
+              color: "var(--color-text-muted)",
+              margin: "0 0 12px",
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+            }}
+          >
+            Implementation
+          </p>
+          <pre
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 11,
+              color: "var(--color-primary)",
+              margin: 0,
+              overflow: "auto",
+              background: "rgba(0, 0, 0, 0.2)",
+              padding: 12,
+              borderRadius: 8,
+            }}
+          >
+{`import ParticleFieldWaves from "@/components/ui/ParticleFieldWaves";
+
+<ParticleFieldWaves height={400} />
+
+{/* 80 particles moving in sinusoidal waves */}
+{/* Frequency: 0.02-0.04 */}
+{/* Amplitude: 30-80px */}`}
+          </pre>
+        </div>
+      </section>
+
+      {/* SECTION 9 — PARTICLE FIELD VARIATIONS (WIND FLOW) */}
+      <section style={{ marginBottom: 64 }}>
+        <SectionHeader
+          number="09"
+          title="Particle Field: Wind Flow"
+          desc="Wind simulation — particles flow horizontally with turbulent vertical oscillations."
+        />
+        <div style={{ marginBottom: 40 }}>
+          <ParticleFieldWindFlow height={400} />
+          <p style={{ marginTop: 16, fontSize: 13, color: "var(--color-text-secondary)" }}>
+            💡 Fluxo contínuo com turbulência natural. Perfeito para efeito de vento e movimento dinâmico.
+          </p>
+        </div>
+        <div
+          style={{
+            background: "var(--color-surface-2)",
+            border: "1px solid var(--color-border)",
+            borderRadius: 12,
+            padding: 20,
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 12,
+              color: "var(--color-text-muted)",
+              margin: "0 0 12px",
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+            }}
+          >
+            Implementation
+          </p>
+          <pre
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 11,
+              color: "var(--color-primary)",
+              margin: 0,
+              overflow: "auto",
+              background: "rgba(0, 0, 0, 0.2)",
+              padding: 12,
+              borderRadius: 8,
+            }}
+          >
+{`import ParticleFieldWindFlow from "@/components/ui/ParticleFieldWindFlow";
+
+<ParticleFieldWindFlow height={400} />
+
+{/* 100 particles flowing horizontally */}
+{/* Turbulent vertical oscillations */}
+{/* Continuous wrap-around effect */}`}
+          </pre>
+        </div>
+      </section>
+
+      {/* SECTION 10 — PARTICLE FIELD VARIATIONS (PULSE) */}
+      <section style={{ marginBottom: 64 }}>
+        <SectionHeader
+          number="10"
+          title="Particle Field: Pulse"
+          desc="Radial pulse — particles expand and contract in synchronized waves from center."
+        />
+        <div style={{ marginBottom: 40 }}>
+          <ParticleFieldPulse height={400} />
+          <p style={{ marginTop: 16, fontSize: 13, color: "var(--color-text-secondary)" }}>
+            💡 Efeito de pulsação rítmica. Ótimo para criar energia e movimento.
+          </p>
+        </div>
+        <div
+          style={{
+            background: "var(--color-surface-2)",
+            border: "1px solid var(--color-border)",
+            borderRadius: 12,
+            padding: 20,
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 12,
+              color: "var(--color-text-muted)",
+              margin: "0 0 12px",
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+            }}
+          >
+            Implementation
+          </p>
+          <pre
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 11,
+              color: "var(--color-primary)",
+              margin: 0,
+              overflow: "auto",
+              background: "rgba(0, 0, 0, 0.2)",
+              padding: 12,
+              borderRadius: 8,
+            }}
+          >
+{`import ParticleFieldPulse from "@/components/ui/ParticleFieldPulse";
+
+<ParticleFieldPulse height={400} />
+
+{/* 70 particles pulsing radially */}
+{/* Distance oscillates with sine */}
+{/* Glow intensity correlates with pulse */}`}
+          </pre>
+        </div>
+      </section>
+
+      {/* SECTION 11 — PARTICLE FIELD VARIATIONS (GRID PULSE) */}
+      <section style={{ marginBottom: 64 }}>
+        <SectionHeader
+          number="11"
+          title="Particle Field: Grid Pulse"
+          desc="Grid formation with rhythmic pulsation — particles arrange in a matrix and distort with beat."
+        />
+        <div style={{ marginBottom: 40 }}>
+          <ParticleFieldGridPulse height={400} />
+          <p style={{ marginTop: 16, fontSize: 13, color: "var(--color-text-secondary)" }}>
+            💡 Grid que distorce e pulsa ritmicamente. Perfeito para efeitos tecnológicos e visualizadores.
+          </p>
+        </div>
+        <div
+          style={{
+            background: "var(--color-surface-2)",
+            border: "1px solid var(--color-border)",
+            borderRadius: 12,
+            padding: 20,
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 12,
+              color: "var(--color-text-muted)",
+              margin: "0 0 12px",
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+            }}
+          >
+            Implementation
+          </p>
+          <pre
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 11,
+              color: "var(--color-primary)",
+              margin: 0,
+              overflow: "auto",
+              background: "rgba(0, 0, 0, 0.2)",
+              padding: 12,
+              borderRadius: 8,
+            }}
+          >
+{`import ParticleFieldGridPulse from "@/components/ui/ParticleFieldGridPulse";
+
+<ParticleFieldGridPulse height={400} />
+
+{/* 48 particles arranged in 8x6 grid */}
+{/* Sinusoidal distortion based on distance from center */}
+{/* Synchronized global pulse + local phase shifts */}`}
           </pre>
         </div>
       </section>

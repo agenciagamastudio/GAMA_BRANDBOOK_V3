@@ -1,4 +1,6 @@
+"use client";
 import PageLayout from "@/components/layout/PageLayout";
+import { useLang } from "@/components/layout/LanguageProvider";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc?: string }) {
   return (
@@ -40,11 +42,12 @@ function Skeleton({ width = "100%", height = 16, radius = 6, style }: { width?: 
 }
 
 export default function SkeletonsPage() {
+  const { t } = useLang();
   return (
     <PageLayout
-      title="Skeletons"
-      accentWord="Skeletons"
-      subtitle="Placeholder de carregamento com efeito shimmer. Reduz percepção de lentidão e mantém o layout estável durante fetches."
+      title={t("skeletons")}
+      accentWord={t("skeletons")}
+      subtitle={t("skeletons_desc")}
       breadcrumb={[
         { label: "Components", href: "/components" },
         { label: "Atoms", href: "/components/atoms/buttons" },

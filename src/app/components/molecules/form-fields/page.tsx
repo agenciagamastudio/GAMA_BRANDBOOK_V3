@@ -1,4 +1,6 @@
+"use client";
 import PageLayout from "@/components/layout/PageLayout";
+import { useLang } from "@/components/layout/LanguageProvider";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc?: string }) {
   return (
@@ -46,11 +48,12 @@ const CODE = `function Field({ label, error, helper, required, children }) {
 </Field>`;
 
 export default function FormFieldsPage() {
+  const { t } = useLang();
   return (
     <PageLayout
-      title="Form Fields"
-      accentWord="Form Fields"
-      subtitle="Componentes de formulário completos: label + input + helper + error. Blocos reutilizáveis para qualquer formulário do sistema."
+      title={t("form_fields")}
+      accentWord={t("form_fields")}
+      subtitle={t("form_fields_desc")}
       breadcrumb={[
         { label: "Components", href: "/components" },
         { label: "Molecules", href: "/components/molecules/cards" },

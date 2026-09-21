@@ -1,4 +1,6 @@
+"use client";
 import PageLayout from "@/components/layout/PageLayout";
+import { useLang } from "@/components/layout/LanguageProvider";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc?: string }) {
   return (
@@ -28,6 +30,7 @@ const CODE_STATES = `{/* Error */}
 <input className="input-field" disabled style={{ opacity: 0.4 }} />`;
 
 export default function InputsPage() {
+  const { t } = useLang();
   const labelStyle: React.CSSProperties = {
     display: "block",
     fontSize: 13,
@@ -44,9 +47,9 @@ export default function InputsPage() {
 
   return (
     <PageLayout
-      title="Inputs"
-      accentWord="Inputs"
-      subtitle="Campos de texto são a ponte entre o usuário e o sistema. A classe .input-field provê consistência em todos os estados."
+      title={t("inputs")}
+      accentWord={t("inputs")}
+      subtitle={t("inputs_desc")}
       breadcrumb={[
         { label: "Components", href: "/components" },
         { label: "Atoms", href: "/components/atoms/buttons" },

@@ -1,4 +1,6 @@
+"use client";
 import PageLayout from "@/components/layout/PageLayout";
+import { useLang } from "@/components/layout/LanguageProvider";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc?: string }) {
   return (
@@ -28,11 +30,12 @@ const CODE = `{/* Simple */}
 </div>`;
 
 export default function DividersPage() {
+  const { t } = useLang();
   return (
     <PageLayout
-      title="Dividers"
-      accentWord="Dividers"
-      subtitle="Divisores separam conteúdo visualmente sem criar ruído. 4 variantes: simples, gradiente, com label e decorativo."
+      title={t("dividers")}
+      accentWord={t("dividers")}
+      subtitle={t("dividers_desc")}
       breadcrumb={[
         { label: "Components", href: "/components" },
         { label: "Atoms", href: "/components/atoms/buttons" },

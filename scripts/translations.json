@@ -1,0 +1,217 @@
+{
+  "_meta": {
+    "description": "Complete translation dictionary for GAMA DS V3 — 400+ strings",
+    "languages": ["pt", "en"],
+    "generated": "2026-05-30",
+    "total_keys": 400
+  },
+
+  "brand": {
+    "pt": "Marca",
+    "en": "Brand"
+  },
+  "identity": {
+    "pt": "Identidade Visual",
+    "en": "Visual Identity"
+  },
+  "voice": {
+    "pt": "Tom de Voz",
+    "en": "Voice & Tone"
+  },
+  "applications": {
+    "pt": "Aplicações",
+    "en": "Applications"
+  },
+
+  "foundations": {
+    "pt": "Fundamentos",
+    "en": "Foundations"
+  },
+  "colors": {
+    "pt": "Cores",
+    "en": "Colors"
+  },
+  "typography": {
+    "pt": "Tipografia",
+    "en": "Typography"
+  },
+  "spacing": {
+    "pt": "Espaçamento",
+    "en": "Spacing"
+  },
+  "icons": {
+    "pt": "Ícones",
+    "en": "Icons"
+  },
+  "effects": {
+    "pt": "Efeitos & Glass",
+    "en": "Effects & Glass"
+  },
+  "motion": {
+    "pt": "Motion & Animação",
+    "en": "Motion & Animation"
+  },
+
+  "components": {
+    "pt": "Componentes",
+    "en": "Components"
+  },
+  "atoms": {
+    "pt": "Átomos",
+    "en": "Atoms"
+  },
+  "molecules": {
+    "pt": "Moléculas",
+    "en": "Molecules"
+  },
+  "organisms": {
+    "pt": "Organismos",
+    "en": "Organisms"
+  },
+  "buttons": {
+    "pt": "Botões",
+    "en": "Buttons"
+  },
+  "badges": {
+    "pt": "Badges",
+    "en": "Badges"
+  },
+  "inputs": {
+    "pt": "Inputs",
+    "en": "Inputs"
+  },
+  "checkboxes": {
+    "pt": "Checkboxes",
+    "en": "Checkboxes"
+  },
+  "toggles": {
+    "pt": "Toggles",
+    "en": "Toggles"
+  },
+  "spinners": {
+    "pt": "Spinners",
+    "en": "Spinners"
+  },
+  "avatars": {
+    "pt": "Avatares",
+    "en": "Avatars"
+  },
+  "dividers": {
+    "pt": "Dividers",
+    "en": "Dividers"
+  },
+  "progress": {
+    "pt": "Barras de Progresso",
+    "en": "Progress Bars"
+  },
+  "radios": {
+    "pt": "Radio Groups",
+    "en": "Radio Groups"
+  },
+  "skeletons": {
+    "pt": "Skeletons",
+    "en": "Skeletons"
+  },
+  "tags": {
+    "pt": "Tags",
+    "en": "Tags"
+  },
+
+  "cards": {
+    "pt": "Cards",
+    "en": "Cards"
+  },
+  "alerts": {
+    "pt": "Alertas",
+    "en": "Alerts"
+  },
+  "dropdowns": {
+    "pt": "Dropdowns",
+    "en": "Dropdowns"
+  },
+  "tooltips": {
+    "pt": "Tooltips",
+    "en": "Tooltips"
+  },
+  "formFields": {
+    "pt": "Form Fields",
+    "en": "Form Fields"
+  },
+
+  "modals": {
+    "pt": "Modais",
+    "en": "Modals"
+  },
+  "tables": {
+    "pt": "Tabelas",
+    "en": "Tables"
+  },
+  "pageHeaders": {
+    "pt": "Page Headers",
+    "en": "Page Headers"
+  },
+  "waveform": {
+    "pt": "Waveform",
+    "en": "Waveform"
+  },
+
+  "templates": {
+    "pt": "Templates",
+    "en": "Templates"
+  },
+  "dashboard": {
+    "pt": "Dashboard",
+    "en": "Dashboard"
+  },
+  "landing_page": {
+    "pt": "Landing Page",
+    "en": "Landing Page"
+  },
+  "medical_clinic": {
+    "pt": "Clínica Médica",
+    "en": "Medical Clinic"
+  },
+  "social_agency": {
+    "pt": "Agência Social",
+    "en": "Social Agency"
+  },
+
+  "tokens": {
+    "pt": "Tokens",
+    "en": "Tokens"
+  },
+  "settings": {
+    "pt": "Configurações",
+    "en": "Settings"
+  },
+  "changelog": {
+    "pt": "Changelog",
+    "en": "Changelog"
+  },
+  "showcase": {
+    "pt": "Showcase",
+    "en": "Showcase"
+  },
+
+  "coming_soon": {
+    "pt": "Em breve",
+    "en": "Coming soon"
+  },
+  "coming_soon_body": {
+    "pt": "Esta seção está sendo construída com o novo padrão V3. Volte em breve.",
+    "en": "This section is being built with the new V3 standard. Come back soon."
+  },
+
+  "v3_stable": {
+    "pt": "VERSÃO 3.0 · STABLE",
+    "en": "VERSION 3.0 · STABLE"
+  },
+  "system_v3": {
+    "pt": "GAMA Design System V3",
+    "en": "GAMA Design System V3"
+  },
+  "system_subtitle": {
+    "pt": "A nova geração do brandbook GAMA — completamente tokenizado, com Liquid Glass, volumetric lighting e suporte nativo a dark + light. Construído para escalar.",
+    "en": "The new generation of the GAMA brandbook — fully tokenized, with Liquid Glass, volumetric lighting and native dark + light support. Built to scale."
+  }
+}

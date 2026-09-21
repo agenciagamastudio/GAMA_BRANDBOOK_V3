@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import PageLayout from "@/components/layout/PageLayout";
+import { useLang } from "@/components/layout/LanguageProvider";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc?: string }) {
   return (
@@ -81,11 +82,12 @@ function Tooltip({ text, position = "top", children, variant = "default" }: {
 }
 
 export default function TooltipsPage() {
+  const { t } = useLang();
   return (
     <PageLayout
-      title="Tooltips"
-      accentWord="Tooltips"
-      subtitle="Tooltips revelam informações contextuais ao hover. Posições top/bottom/left/right e 3 variantes visuais."
+      title={t("tooltips")}
+      accentWord={t("tooltips")}
+      subtitle={t("tooltips_desc")}
       breadcrumb={[
         { label: "Components", href: "/components" },
         { label: "Molecules", href: "/components/molecules/cards" },

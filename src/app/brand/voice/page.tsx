@@ -1,3 +1,6 @@
+"use client";
+
+import { useLang } from "@/components/layout/LanguageProvider";
 import PageLayout from "@/components/layout/PageLayout";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc: string }) {
@@ -111,11 +114,13 @@ const VOCABULARY = [
 ];
 
 export default function VoicePage() {
+  const { t } = useLang();
+
   return (
     <PageLayout
-      title="Tom de Voz"
-      accentWord="Voz"
-      subtitle="Como a GAMA se comunica — princípios de linguagem, tom por contexto e vocabulário oficial."
+      title={t("voice")}
+      accentWord={t("voice")}
+      subtitle={t("voice_intro")}
       breadcrumb={[
         { label: "Brand", href: "/brand/identity" },
         { label: "Voice & Tone" },

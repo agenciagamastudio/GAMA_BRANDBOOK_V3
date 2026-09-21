@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useLang } from "@/components/layout/LanguageProvider";
 import PageLayout from "@/components/layout/PageLayout";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc?: string }) {
@@ -59,11 +60,13 @@ export default function BadgesPage() {
     { label: "LG", style: { fontSize: 15, padding: "7px 18px" } as React.CSSProperties },
   ];
 
+  const { t } = useLang();
+
   return (
     <PageLayout
-      title="Badges & Pills"
-      accentWord="Badges"
-      subtitle="Pills e badges comunicam estados, categorias e contagens de forma compacta. 3 variantes semânticas + customizações."
+      title={t("badges")}
+      accentWord={t("badges")}
+      subtitle={t("badges_desc")}
       breadcrumb={[
         { label: "Components", href: "/components" },
         { label: "Atoms", href: "/components/atoms/buttons" },

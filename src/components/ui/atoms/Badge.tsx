@@ -13,12 +13,12 @@ export interface BadgeProps {
 }
 
 const dotColors: Record<BadgeVariant, string> = {
-  green: '#88ce11',
-  blue: '#3b82f6',
-  muted: '#71717a',
-  error: '#e11d48',
-  warning: '#f59e0b',
-  info: '#3b82f6',
+  green: 'var(--color-primary, #88ce11)',
+  blue: 'var(--color-info, #3b82f6)',
+  muted: 'var(--color-text-muted, #71717a)',
+  error: 'var(--color-error, #e11d48)',
+  warning: 'var(--color-warning, #f59e0b)',
+  info: 'var(--color-info, #3b82f6)',
 };
 
 const dotStyle = (variant: BadgeVariant): React.CSSProperties => ({
@@ -35,8 +35,8 @@ const variantClassMap: Record<BadgeVariant, string> = {
   green: 'pill pill-green',
   blue: 'pill pill-blue',
   muted: 'pill pill-muted',
-  error: 'pill pill-muted',
-  warning: 'pill pill-muted',
+  error: 'pill pill-error',
+  warning: 'pill pill-warning',
   info: 'pill pill-blue',
 };
 

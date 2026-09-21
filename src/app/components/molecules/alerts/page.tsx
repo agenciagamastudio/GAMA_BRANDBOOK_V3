@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import PageLayout from "@/components/layout/PageLayout";
+import { useLang } from "@/components/layout/LanguageProvider";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc?: string }) {
   return (
@@ -45,6 +46,7 @@ const CODE = `function Alert({ type, title, message, dismissible, onDismiss }) {
 }`;
 
 export default function AlertsPage() {
+  const { t } = useLang();
   const [dismissed, setDismissed] = useState<Record<string, boolean>>({});
   const [bannerDismissed, setBannerDismissed] = useState(false);
 
@@ -52,9 +54,9 @@ export default function AlertsPage() {
 
   return (
     <PageLayout
-      title="Alerts"
-      accentWord="Alerts"
-      subtitle="Alertas comunicam estados importantes: erros, avisos, confirmações e informações. 4 variantes semânticas + banner + dismissível."
+      title={t("alerts")}
+      accentWord={t("alerts")}
+      subtitle={t("alerts_desc")}
       breadcrumb={[
         { label: "Components", href: "/components" },
         { label: "Molecules", href: "/components/molecules/cards" },

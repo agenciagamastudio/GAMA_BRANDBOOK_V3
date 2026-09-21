@@ -14,24 +14,24 @@ export interface TagProps {
 
 const variantStyles: Record<TagVariant, React.CSSProperties> = {
   green: {
-    backgroundColor: 'rgba(136,206,17,0.12)',
-    color: '#88ce11',
-    border: '1px solid rgba(136,206,17,0.25)',
+    backgroundColor: 'var(--color-primary-dim)',
+    color: 'var(--color-primary)',
+    border: '1px solid var(--color-border-green)',
   },
   blue: {
-    backgroundColor: 'rgba(59,130,246,0.12)',
-    color: '#3b82f6',
-    border: '1px solid rgba(59,130,246,0.25)',
+    backgroundColor: 'var(--color-info-dim)',
+    color: 'var(--color-info)',
+    border: '1px solid var(--color-info-border)',
   },
   muted: {
-    backgroundColor: 'rgba(113,113,122,0.15)',
-    color: 'var(--color-text-secondary, #a1a1aa)',
-    border: '1px solid rgba(255,255,255,0.08)',
+    backgroundColor: 'var(--color-muted-bg, rgba(113,113,122,0.15))',
+    color: 'var(--color-text-secondary)',
+    border: '1px solid var(--color-border)',
   },
   error: {
-    backgroundColor: 'rgba(225,29,72,0.12)',
-    color: '#e11d48',
-    border: '1px solid rgba(225,29,72,0.25)',
+    backgroundColor: 'var(--color-error-dim)',
+    color: 'var(--color-error)',
+    border: '1px solid var(--color-error-border)',
   },
 };
 

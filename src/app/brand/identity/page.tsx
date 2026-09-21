@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useLang } from "@/components/layout/LanguageProvider";
 import PageLayout from "@/components/layout/PageLayout";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc: string }) {
@@ -55,35 +58,37 @@ function LogoBg({ bg, label, children, border }: { bg: string; label: string; ch
   );
 }
 
-const PERSONALITY_TRAITS = [
-  {
-    word: "Inovadora",
-    desc: "Não seguimos tendências — as criamos. O design system V3 introduz Liquid Glass quando a indústria ainda usa flat.",
-    icon: "◆",
-  },
-  {
-    word: "Premium",
-    desc: "Cada pixel importa. Glassmorphism, volumetric lighting e animações fluidas garantem percepção de alta qualidade.",
-    icon: "★",
-  },
-  {
-    word: "Confiável",
-    desc: "Tokens documentados, componentes testados e padrões consistentes. Zero surpresas em produção.",
-    icon: "✓",
-  },
-  {
-    word: "Ousada",
-    desc: "Verde neon em dark mode, tipografia Black em 900, espaços vazios intencionais. Presença que não se desculpa.",
-    icon: "⚡",
-  },
-];
-
 export default function IdentityPage() {
+  const { t } = useLang();
+
+  const PERSONALITY_TRAITS = [
+    {
+      word: t("brand_inovadora"),
+      desc: t("brand_inovadora_desc"),
+      icon: "◆",
+    },
+    {
+      word: t("brand_premium"),
+      desc: t("brand_premium_desc"),
+      icon: "★",
+    },
+    {
+      word: t("brand_confiavel"),
+      desc: t("brand_confiavel_desc"),
+      icon: "✓",
+    },
+    {
+      word: t("brand_ousada"),
+      desc: t("brand_ousada_desc"),
+      icon: "⚡",
+    },
+  ];
+
   return (
     <PageLayout
-      title="Identidade da Marca"
-      accentWord="Marca"
-      subtitle="Logotipos oficiais, cores e tipografia da família GAMA — Studio, TV e Engine."
+      title={t("brand_identity")}
+      accentWord={t("brand")}
+      subtitle={t("brand_identity_desc")}
       breadcrumb={[
         { label: "Brand", href: "/brand/identity" },
         { label: "Identity" },
@@ -94,8 +99,8 @@ export default function IdentityPage() {
       <section style={{ marginBottom: 64 }}>
         <SectionHeader
           number="01"
-          title="Isotipo — Símbolo G"
-          desc="O símbolo isolado da GAMA. Forma geométrica com recorte triangular característico no canto superior direito."
+          title={t("isotipo_title")}
+          desc={t("isotipo_desc")}
         />
 
         {/* Hero isotipo showcase */}
@@ -215,8 +220,8 @@ export default function IdentityPage() {
       <section style={{ marginBottom: 64 }}>
         <SectionHeader
           number="02"
-          title="Imagotipo — GAMA Studio"
-          desc="Combinação do símbolo G com o logotipo completo. Uso principal em contextos da agência."
+          title={t("imagotipo_title")}
+          desc={t("imagotipo_desc")}
         />
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
@@ -283,8 +288,8 @@ export default function IdentityPage() {
       <section style={{ marginBottom: 64 }}>
         <SectionHeader
           number="03"
-          title="Sub-Marcas"
-          desc="Família de marcas GAMA — cada vertical com identidade própria mantendo coerência com a marca-mãe."
+          title={t("subbrands_title")}
+          desc={t("subbrands_desc")}
         />
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
@@ -431,8 +436,8 @@ export default function IdentityPage() {
       <section style={{ marginBottom: 64 }}>
         <SectionHeader
           number="04"
-          title="Cores de Marca"
-          desc="Três variações do verde GAMA — use Primary para CTA, Light para hover, Dark para pressed."
+          title={t("brand_colors_title")}
+          desc={t("brand_colors_desc")}
         />
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
           {[
@@ -470,8 +475,8 @@ export default function IdentityPage() {
       <section style={{ marginBottom: 64 }}>
         <SectionHeader
           number="05"
-          title="Tipografia de Marca"
-          desc="Montserrat (wordmark, display) + Poppins (UI, corpo). Ambas em Black 900 para headlines de impacto."
+          title={t("brand_typography_title")}
+          desc={t("brand_typography_desc")}
         />
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
           <div className="glass-illuminated" style={{ padding: "32px 36px", borderRadius: 20, textAlign: "center" }}>
@@ -547,8 +552,8 @@ export default function IdentityPage() {
       <section style={{ marginBottom: 32 }}>
         <SectionHeader
           number="06"
-          title="Personalidade da Marca"
-          desc="4 pilares que definem como a GAMA se apresenta em todas as touchpoints."
+          title={t("brand_personality")}
+          desc={t("brand_identity_desc")}
         />
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 }}>
           {PERSONALITY_TRAITS.map((t) => (

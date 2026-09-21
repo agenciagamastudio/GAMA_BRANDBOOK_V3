@@ -1,5 +1,7 @@
+"use client";
 import Link from "next/link";
 import PageLayout from "@/components/layout/PageLayout";
+import { useLang } from "@/components/layout/LanguageProvider";
 
 const TEMPLATES = [
   {
@@ -41,11 +43,12 @@ const TEMPLATES = [
 ];
 
 export default function TemplatesPage() {
+  const { t } = useLang();
   return (
     <PageLayout
-      title="Templates"
-      accentWord="Templates"
-      subtitle="Layouts completos prontos para adaptar — desenvolvidos sobre o GAMA Design System V3."
+      title={t("templates")}
+      accentWord={t("templates")}
+      subtitle={t("templates_desc")}
       breadcrumb={[{ label: "Templates" }]}
       badge="V3 · TEMPLATES"
     >

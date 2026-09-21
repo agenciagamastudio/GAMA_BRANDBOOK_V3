@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import PageLayout from "@/components/layout/PageLayout";
+import { useLang } from "@/components/layout/LanguageProvider";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc?: string }) {
   return (
@@ -64,6 +65,7 @@ function formatTime(s: number) {
 }
 
 export default function WaveformPage() {
+  const { t } = useLang();
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [volume, setVolume] = useState(75);
@@ -89,9 +91,9 @@ export default function WaveformPage() {
 
   return (
     <PageLayout
-      title="Waveform"
-      accentWord="Waveform"
-      subtitle="Visualizador de áudio animado com barras CSS. Player completo com waveform, progress, volume e playlist."
+      title={t("waveform")}
+      accentWord={t("waveform")}
+      subtitle={t("waveform_desc")}
       breadcrumb={[
         { label: "Components", href: "/components" },
         { label: "Organisms", href: "/components/organisms/tables" },

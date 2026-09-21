@@ -1,6 +1,7 @@
 "use client";
 
 import PageLayout from "@/components/layout/PageLayout";
+import { useLang } from "@/components/layout/LanguageProvider";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc?: string }) {
   return (
@@ -56,11 +57,12 @@ const CODE = `<table style={{ width: "100%", borderCollapse: "collapse" }}>
 </table>`;
 
 export default function TablesPage() {
+  const { t } = useLang();
   return (
     <PageLayout
-      title="Tables"
-      accentWord="Tables"
-      subtitle="Tabelas de dados com header sticky, hover state, linhas listradas e colunas de ações. Otimizadas para grandes datasets."
+      title={t("tables")}
+      accentWord={t("tables")}
+      subtitle={t("tables_desc")}
       breadcrumb={[
         { label: "Components", href: "/components" },
         { label: "Organisms", href: "/components/organisms/tables" },

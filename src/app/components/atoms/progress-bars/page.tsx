@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import PageLayout from "@/components/layout/PageLayout";
+import { useLang } from "@/components/layout/LanguageProvider";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc?: string }) {
   return (
@@ -62,6 +63,7 @@ function ProgressBar({ value, color = "var(--color-primary)", size = "md", strip
 }
 
 export default function ProgressBarsPage() {
+  const { t } = useLang();
   const [animated, setAnimated] = useState(30);
 
   useEffect(() => {
@@ -76,9 +78,9 @@ export default function ProgressBarsPage() {
 
   return (
     <PageLayout
-      title="Progress Bars"
-      accentWord="Progress"
-      subtitle="Barras de progresso comunicam o avanço de um processo. CSS-only com transição suave e suporte a variantes coloridas."
+      title={t("progress_bars")}
+      accentWord={t("progress")}
+      subtitle={t("progress_bars_desc")}
       breadcrumb={[
         { label: "Components", href: "/components" },
         { label: "Atoms", href: "/components/atoms/buttons" },

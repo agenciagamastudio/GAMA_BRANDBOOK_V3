@@ -1,4 +1,6 @@
+"use client";
 import PageLayout from "@/components/layout/PageLayout";
+import { useLang } from "@/components/layout/LanguageProvider";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc?: string }) {
   return (
@@ -29,6 +31,7 @@ const CODE_LOADING_BTN = `<button className="btn btn-primary" disabled>
 </button>`;
 
 export default function SpinnersPage() {
+  const { t } = useLang();
   const spinStyle = (size: number, color: string = "var(--color-primary)", thickness: number = 2.5): React.CSSProperties => ({
     width: size, height: size,
     border: `${thickness}px solid var(--color-border)`,
@@ -47,9 +50,9 @@ export default function SpinnersPage() {
 
   return (
     <PageLayout
-      title="Spinners"
-      accentWord="Spinners"
-      subtitle="Indicadores de carregamento CSS-only. Sem dependências, sem JavaScript — apenas animações nativas do browser."
+      title={t("spinners")}
+      accentWord={t("spinners")}
+      subtitle={t("spinners_desc")}
       breadcrumb={[
         { label: "Components", href: "/components" },
         { label: "Atoms", href: "/components/atoms/buttons" },

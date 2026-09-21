@@ -13,9 +13,9 @@ export interface AvatarProps {
 }
 
 const statusColors: Record<AvatarStatus, string> = {
-  online: '#10b981',
-  offline: '#71717a',
-  busy: '#f59e0b',
+  online: 'var(--color-success, #10b981)',
+  offline: 'var(--color-text-muted, #71717a)',
+  busy: 'var(--color-warning, #f59e0b)',
 };
 
 function getInitials(name: string): string {
@@ -64,7 +64,7 @@ const Avatar: React.FC<AvatarProps> = ({
     fontFamily: 'var(--font-main, "Poppins", sans-serif)',
     fontWeight: 600,
     fontSize,
-    color: 'var(--color-text-secondary, #a1a1aa)',
+    color: 'var(--color-text-secondary, rgba(255, 255, 255, 0.7))',
     userSelect: 'none',
     lineHeight: 1,
   };

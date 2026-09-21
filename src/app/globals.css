@@ -16,9 +16,18 @@
 
   /* Functional */
   --color-success: #10b981;
+  --color-success-dim: rgba(16, 185, 129, 0.15);
+  --color-success-border: rgba(16, 185, 129, 0.25);
   --color-warning: #f59e0b;
+  --color-warning-dim: rgba(245, 158, 11, 0.15);
+  --color-warning-border: rgba(245, 158, 11, 0.25);
   --color-error: #e11d48;
+  --color-error-dim: rgba(225, 29, 72, 0.15);
+  --color-error-border: rgba(225, 29, 72, 0.25);
   --color-info: #3b82f6;
+  --color-info-dim: rgba(59, 130, 246, 0.15);
+  --color-info-border: rgba(59, 130, 246, 0.25);
+  --color-muted-bg: rgba(113, 113, 122, 0.15);
 
   /* Typography */
   --font-main: var(--font-poppins), "Poppins", sans-serif;
@@ -99,7 +108,7 @@
   --color-border: rgba(255, 255, 255, 0.1);
   --color-border-green: rgba(136, 206, 17, 0.25);
   --color-text: #ffffff;
-  --color-text-secondary: #a1a1aa;
+  --color-text-secondary: rgba(255, 255, 255, 0.7);
   --color-text-muted: #71717a;
 
   --glass-bg: rgba(39, 39, 39, 0.65);
@@ -655,10 +664,20 @@ button {
   color: var(--color-info);
 }
 .pill-muted {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: var(--color-border);
-  color: var(--color-text-muted);
-}
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--color-border);
+    color: var(--color-text-muted);
+  }
+  .pill-error {
+    background: var(--color-error-dim, rgba(225, 29, 72, 0.15));
+    border-color: var(--color-error-border, rgba(225, 29, 72, 0.25));
+    color: var(--color-error, #e11d48);
+  }
+  .pill-warning {
+    background: var(--color-warning-dim, rgba(245, 158, 11, 0.15));
+    border-color: var(--color-warning-border, rgba(245, 158, 11, 0.25));
+    color: var(--color-warning, #f59e0b);
+  }
 
 /* ═══════════════════════════════════════════
    BUTTONS

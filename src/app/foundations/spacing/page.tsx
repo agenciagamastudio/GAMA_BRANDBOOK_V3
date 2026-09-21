@@ -1,3 +1,6 @@
+"use client";
+
+import { useLang } from "@/components/layout/LanguageProvider";
 import PageLayout from "@/components/layout/PageLayout";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc: string }) {
@@ -45,11 +48,12 @@ const RADIUS_SCALE = [
 ];
 
 export default function SpacingPage() {
+  const { t } = useLang();
   return (
     <PageLayout
-      title="Espaçamento"
-      accentWord="Espaçamento"
-      subtitle="Sistema de espaçamento baseado em múltiplos de 4px — consistência visual garantida em toda a interface."
+      title={t("spacing")}
+      accentWord={t("spacing")}
+      subtitle={t("spacing_scale")}
       breadcrumb={[
         { label: "Foundations", href: "/foundations/colors" },
         { label: "Spacing" },

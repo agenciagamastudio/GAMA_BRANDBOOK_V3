@@ -5,51 +5,57 @@
 export default {
   color: {
     primary: {
+      $value: "#88ce11",
+      $type: "color",
+      $description: "Neon Green - Primary brand color (GAMA V3)",
       dim: {
-        $value: "#88ce1126",
+        $value: "rgba(136, 206, 17, 0.15)",
         $type: "color",
         $description: "Primary with 15% opacity",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
-        original: {
+      },
+      glow: {
+        $value: "rgba(136, 206, 17, 0.35)",
+        $type: "color",
+        $description: "Primary with 35% opacity for glow",
+        filePath: "design-tokens/tokens.json",
+        isSource: true,
+      },
+      filePath: "design-tokens/tokens.json",
+      isSource: true,
+      original: {
+        $value: "#88ce11",
+        $type: "color",
+        $description: "Neon Green - Primary brand color (GAMA V3)",
+        dim: {
           $value: "rgba(136, 206, 17, 0.15)",
           $type: "color",
           $description: "Primary with 15% opacity",
+          filePath: "design-tokens/tokens.json",
+          isSource: true,
         },
-        name: "ColorPrimaryDim",
-        attributes: {
-          category: "color",
-          type: "primary",
-          item: "dim",
-        },
-        path: ["color", "primary", "dim"],
-      },
-      glow: {
-        $value: "#88ce1159",
-        $type: "color",
-        $description: "Primary with 35% opacity for glow",
-        filePath: "tokens.json",
-        isSource: true,
-        original: {
+        glow: {
           $value: "rgba(136, 206, 17, 0.35)",
           $type: "color",
           $description: "Primary with 35% opacity for glow",
+          filePath: "design-tokens/tokens.json",
+          isSource: true,
         },
-        name: "ColorPrimaryGlow",
-        attributes: {
-          category: "color",
-          type: "primary",
-          item: "glow",
-        },
-        path: ["color", "primary", "glow"],
       },
+      name: "ColorPrimary",
+      attributes: {
+        category: "color",
+        type: "primary",
+      },
+      path: ["color", "primary"],
     },
     functional: {
       success: {
         $value: "#10b981",
         $type: "color",
         $description: "Success state color",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "#10b981",
@@ -68,7 +74,7 @@ export default {
         $value: "#f59e0b",
         $type: "color",
         $description: "Warning state color",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "#f59e0b",
@@ -87,7 +93,7 @@ export default {
         $value: "#e11d48",
         $type: "color",
         $description: "Error state color",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "#e11d48",
@@ -106,7 +112,7 @@ export default {
         $value: "#3b82f6",
         $type: "color",
         $description: "Info state color",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "#3b82f6",
@@ -127,7 +133,7 @@ export default {
         $value: "#161616",
         $type: "color",
         $description: "Dark background",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "#161616",
@@ -146,7 +152,7 @@ export default {
         $value: "#272727",
         $type: "color",
         $description: "Surface color",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "#272727",
@@ -165,7 +171,7 @@ export default {
         $value: "#1f1f1f",
         $type: "color",
         $description: "Secondary surface",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "#1f1f1f",
@@ -184,7 +190,7 @@ export default {
         $value: "#303030",
         $type: "color",
         $description: "Tertiary surface",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "#303030",
@@ -199,13 +205,89 @@ export default {
         },
         path: ["color", "background", "surface3"],
       },
+      light: {
+        $value: "#f8f8f8",
+        $type: "color",
+        $description: "Light background",
+        filePath: "design-tokens/tokens.json",
+        isSource: true,
+        original: {
+          $value: "#f8f8f8",
+          $type: "color",
+          $description: "Light background",
+        },
+        name: "ColorBackgroundLight",
+        attributes: {
+          category: "color",
+          type: "background",
+          item: "light",
+        },
+        path: ["color", "background", "light"],
+      },
+      lightSurface: {
+        $value: "#ffffff",
+        $type: "color",
+        $description: "Light surface color",
+        filePath: "design-tokens/tokens.json",
+        isSource: true,
+        original: {
+          $value: "#ffffff",
+          $type: "color",
+          $description: "Light surface color",
+        },
+        name: "ColorBackgroundLightSurface",
+        attributes: {
+          category: "color",
+          type: "background",
+          item: "lightSurface",
+        },
+        path: ["color", "background", "lightSurface"],
+      },
+      lightSurface2: {
+        $value: "#f0f0f0",
+        $type: "color",
+        $description: "Light secondary surface",
+        filePath: "design-tokens/tokens.json",
+        isSource: true,
+        original: {
+          $value: "#f0f0f0",
+          $type: "color",
+          $description: "Light secondary surface",
+        },
+        name: "ColorBackgroundLightSurface2",
+        attributes: {
+          category: "color",
+          type: "background",
+          item: "lightSurface2",
+        },
+        path: ["color", "background", "lightSurface2"],
+      },
+      lightSurface3: {
+        $value: "#e8e8e8",
+        $type: "color",
+        $description: "Light tertiary surface",
+        filePath: "design-tokens/tokens.json",
+        isSource: true,
+        original: {
+          $value: "#e8e8e8",
+          $type: "color",
+          $description: "Light tertiary surface",
+        },
+        name: "ColorBackgroundLightSurface3",
+        attributes: {
+          category: "color",
+          type: "background",
+          item: "lightSurface3",
+        },
+        path: ["color", "background", "lightSurface3"],
+      },
     },
     text: {
       primary: {
         $value: "#ffffff",
         $type: "color",
         $description: "Primary text color",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "#ffffff",
@@ -224,7 +306,7 @@ export default {
         $value: "#ffffffb3",
         $type: "color",
         $description: "Secondary text color",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "rgba(255, 255, 255, 0.7)",
@@ -239,18 +321,94 @@ export default {
         },
         path: ["color", "text", "secondary"],
       },
+      muted: {
+        $value: "#71717a",
+        $type: "color",
+        $description: "Muted text color",
+        filePath: "design-tokens/tokens.json",
+        isSource: true,
+        original: {
+          $value: "#71717a",
+          $type: "color",
+          $description: "Muted text color",
+        },
+        name: "ColorTextMuted",
+        attributes: {
+          category: "color",
+          type: "text",
+          item: "muted",
+        },
+        path: ["color", "text", "muted"],
+      },
+      lightPrimary: {
+        $value: "#111111",
+        $type: "color",
+        $description: "Light theme primary text",
+        filePath: "design-tokens/tokens.json",
+        isSource: true,
+        original: {
+          $value: "#111111",
+          $type: "color",
+          $description: "Light theme primary text",
+        },
+        name: "ColorTextLightPrimary",
+        attributes: {
+          category: "color",
+          type: "text",
+          item: "lightPrimary",
+        },
+        path: ["color", "text", "lightPrimary"],
+      },
+      lightSecondary: {
+        $value: "#555555",
+        $type: "color",
+        $description: "Light theme secondary text",
+        filePath: "design-tokens/tokens.json",
+        isSource: true,
+        original: {
+          $value: "#555555",
+          $type: "color",
+          $description: "Light theme secondary text",
+        },
+        name: "ColorTextLightSecondary",
+        attributes: {
+          category: "color",
+          type: "text",
+          item: "lightSecondary",
+        },
+        path: ["color", "text", "lightSecondary"],
+      },
+      lightMuted: {
+        $value: "#888888",
+        $type: "color",
+        $description: "Light theme muted text",
+        filePath: "design-tokens/tokens.json",
+        isSource: true,
+        original: {
+          $value: "#888888",
+          $type: "color",
+          $description: "Light theme muted text",
+        },
+        name: "ColorTextLightMuted",
+        attributes: {
+          category: "color",
+          type: "text",
+          item: "lightMuted",
+        },
+        path: ["color", "text", "lightMuted"],
+      },
     },
     border: {
       default: {
         $value: "#ffffff1a",
         $type: "color",
-        $description: "Default border color",
-        filePath: "tokens.json",
+        $description: "Default border color (dark)",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "rgba(255, 255, 255, 0.1)",
           $type: "color",
-          $description: "Default border color",
+          $description: "Default border color (dark)",
         },
         name: "ColorBorderDefault",
         attributes: {
@@ -263,13 +421,13 @@ export default {
       green: {
         $value: "#88ce1140",
         $type: "color",
-        $description: "Green border accent",
-        filePath: "tokens.json",
+        $description: "Green border accent (dark)",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "rgba(136, 206, 17, 0.25)",
           $type: "color",
-          $description: "Green border accent",
+          $description: "Green border accent (dark)",
         },
         name: "ColorBorderGreen",
         attributes: {
@@ -279,6 +437,44 @@ export default {
         },
         path: ["color", "border", "green"],
       },
+      lightDefault: {
+        $value: "#00000014",
+        $type: "color",
+        $description: "Default border color (light)",
+        filePath: "design-tokens/tokens.json",
+        isSource: true,
+        original: {
+          $value: "rgba(0, 0, 0, 0.08)",
+          $type: "color",
+          $description: "Default border color (light)",
+        },
+        name: "ColorBorderLightDefault",
+        attributes: {
+          category: "color",
+          type: "border",
+          item: "lightDefault",
+        },
+        path: ["color", "border", "lightDefault"],
+      },
+      lightGreen: {
+        $value: "#88ce1166",
+        $type: "color",
+        $description: "Green border accent (light)",
+        filePath: "design-tokens/tokens.json",
+        isSource: true,
+        original: {
+          $value: "rgba(136, 206, 17, 0.4)",
+          $type: "color",
+          $description: "Green border accent (light)",
+        },
+        name: "ColorBorderLightGreen",
+        attributes: {
+          category: "color",
+          type: "border",
+          item: "lightGreen",
+        },
+        path: ["color", "border", "lightGreen"],
+      },
     },
   },
   typography: {
@@ -287,7 +483,7 @@ export default {
         $value: "'Poppins', sans-serif",
         $type: "fontFamily",
         $description: "Main font family",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "'Poppins', sans-serif",
@@ -306,7 +502,7 @@ export default {
         $value: "'JetBrains Mono', monospace",
         $type: "fontFamily",
         $description: "Monospace font family",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "'JetBrains Mono', monospace",
@@ -328,7 +524,7 @@ export default {
       $value: "6px",
       $type: "dimension",
       $description: "Small border radius",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "6px",
@@ -346,7 +542,7 @@ export default {
       $value: "12px",
       $type: "dimension",
       $description: "Medium border radius",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "12px",
@@ -364,7 +560,7 @@ export default {
       $value: "16px",
       $type: "dimension",
       $description: "Large border radius",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "16px",
@@ -382,7 +578,7 @@ export default {
       $value: "24px",
       $type: "dimension",
       $description: "Extra large border radius",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "24px",
@@ -402,7 +598,7 @@ export default {
       $value: "4px",
       $type: "dimension",
       $description: "4px spacing unit",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "4px",
@@ -420,7 +616,7 @@ export default {
       $value: "8px",
       $type: "dimension",
       $description: "8px spacing unit",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "8px",
@@ -438,7 +634,7 @@ export default {
       $value: "12px",
       $type: "dimension",
       $description: "12px spacing unit",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "12px",
@@ -456,7 +652,7 @@ export default {
       $value: "16px",
       $type: "dimension",
       $description: "16px spacing unit",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "16px",
@@ -474,7 +670,7 @@ export default {
       $value: "20px",
       $type: "dimension",
       $description: "20px spacing unit",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "20px",
@@ -492,7 +688,7 @@ export default {
       $value: "24px",
       $type: "dimension",
       $description: "24px spacing unit",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "24px",
@@ -510,7 +706,7 @@ export default {
       $value: "32px",
       $type: "dimension",
       $description: "32px spacing unit",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "32px",
@@ -528,7 +724,7 @@ export default {
       $value: "40px",
       $type: "dimension",
       $description: "40px spacing unit",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "40px",
@@ -546,7 +742,7 @@ export default {
       $value: "48px",
       $type: "dimension",
       $description: "48px spacing unit",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "48px",
@@ -564,7 +760,7 @@ export default {
       $value: "64px",
       $type: "dimension",
       $description: "64px spacing unit",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "64px",
@@ -584,7 +780,7 @@ export default {
       $value: "24px",
       $type: "dimension",
       $description: "Glass blur effect strength",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "24px",
@@ -602,7 +798,7 @@ export default {
       $value: "12px",
       $type: "dimension",
       $description: "Small glass blur",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "12px",
@@ -620,7 +816,7 @@ export default {
       $value: "40px",
       $type: "dimension",
       $description: "Large glass blur",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "40px",
@@ -638,7 +834,7 @@ export default {
       $value: "0.08",
       $type: "number",
       $description: "Glass surface opacity",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "0.08",
@@ -656,7 +852,7 @@ export default {
       $value: "#ffffff14",
       $type: "color",
       $description: "Glass surface color",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "rgba(255, 255, 255, 0.08)",
@@ -674,7 +870,7 @@ export default {
       $value: "#ffffff1f",
       $type: "color",
       $description: "Glass surface on hover",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "rgba(255, 255, 255, 0.12)",
@@ -692,7 +888,7 @@ export default {
       $value: "#ffffff26",
       $type: "color",
       $description: "Glass border color",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "rgba(255, 255, 255, 0.15)",
@@ -710,7 +906,7 @@ export default {
       $value: "#ffffff73",
       $type: "color",
       $description: "Glass highlight color",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "rgba(255, 255, 255, 0.45)",
@@ -725,13 +921,87 @@ export default {
       path: ["glass", "highlight"],
     },
   },
+  liquidGlass: {
+    blur: {
+      $value: "32px",
+      $type: "dimension",
+      $description: "Liquid glass blur (refractive)",
+      filePath: "design-tokens/tokens.json",
+      isSource: true,
+      original: {
+        $value: "32px",
+        $type: "dimension",
+        $description: "Liquid glass blur (refractive)",
+      },
+      name: "LiquidGlassBlur",
+      attributes: {
+        category: "liquidGlass",
+        type: "blur",
+      },
+      path: ["liquidGlass", "blur"],
+    },
+    opacity: {
+      $value: "0.06",
+      $type: "number",
+      $description: "Liquid glass opacity",
+      filePath: "design-tokens/tokens.json",
+      isSource: true,
+      original: {
+        $value: "0.06",
+        $type: "number",
+        $description: "Liquid glass opacity",
+      },
+      name: "LiquidGlassOpacity",
+      attributes: {
+        category: "liquidGlass",
+        type: "opacity",
+      },
+      path: ["liquidGlass", "opacity"],
+    },
+    distortion: {
+      $value: "4px",
+      $type: "dimension",
+      $description: "Distortion amount",
+      filePath: "design-tokens/tokens.json",
+      isSource: true,
+      original: {
+        $value: "4px",
+        $type: "dimension",
+        $description: "Distortion amount",
+      },
+      name: "LiquidGlassDistortion",
+      attributes: {
+        category: "liquidGlass",
+        type: "distortion",
+      },
+      path: ["liquidGlass", "distortion"],
+    },
+    surface: {
+      $value: "#ffffff0f",
+      $type: "color",
+      $description: "Liquid glass surface",
+      filePath: "design-tokens/tokens.json",
+      isSource: true,
+      original: {
+        $value: "rgba(255, 255, 255, 0.06)",
+        $type: "color",
+        $description: "Liquid glass surface",
+      },
+      name: "LiquidGlassSurface",
+      attributes: {
+        category: "liquidGlass",
+        type: "surface",
+      },
+      path: ["liquidGlass", "surface"],
+    },
+  },
   volumetric: {
     light: {
       opacity: {
         $value: "0.12",
         $type: "number",
         $description: "Volumetric light opacity",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "0.12",
@@ -750,7 +1020,7 @@ export default {
         $value: "#88ce111f",
         $type: "color",
         $description: "Volumetric light color (god rays)",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "rgba(136, 206, 17, 0.12)",
@@ -769,7 +1039,7 @@ export default {
         $value: "120px",
         $type: "dimension",
         $description: "Volumetric light spread",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "120px",
@@ -791,7 +1061,7 @@ export default {
       $value: "0 2px 8px rgba(0, 0, 0, 0.3)",
       $type: "shadow",
       $description: "Elevation level 1",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "0 2px 8px rgba(0, 0, 0, 0.3)",
@@ -809,7 +1079,7 @@ export default {
       $value: "0 8px 24px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3)",
       $type: "shadow",
       $description: "Elevation level 2",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "0 8px 24px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3)",
@@ -827,7 +1097,7 @@ export default {
       $value: "0 16px 48px rgba(0, 0, 0, 0.7), 0 8px 24px rgba(0, 0, 0, 0.5)",
       $type: "shadow",
       $description: "Elevation level 3",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "0 16px 48px rgba(0, 0, 0, 0.7), 0 8px 24px rgba(0, 0, 0, 0.5)",
@@ -845,7 +1115,7 @@ export default {
       $value: "0 1px 3px rgba(0, 0, 0, 0.6)",
       $type: "shadow",
       $description: "Contact shadow",
-      filePath: "tokens.json",
+      filePath: "design-tokens/tokens.json",
       isSource: true,
       original: {
         $value: "0 1px 3px rgba(0, 0, 0, 0.6)",
@@ -866,7 +1136,7 @@ export default {
         $value: "0 0 8px rgba(136, 206, 17, 0.3)",
         $type: "shadow",
         $description: "Small primary glow",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "0 0 8px rgba(136, 206, 17, 0.3)",
@@ -886,7 +1156,7 @@ export default {
           "0 0 20px rgba(136, 206, 17, 0.4), 0 0 40px rgba(136, 206, 17, 0.15)",
         $type: "shadow",
         $description: "Medium primary glow",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value:
@@ -907,7 +1177,7 @@ export default {
           "0 0 40px rgba(136, 206, 17, 0.5), 0 0 80px rgba(136, 206, 17, 0.2)",
         $type: "shadow",
         $description: "Large primary glow",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value:
@@ -929,7 +1199,7 @@ export default {
         $value: "0 0 8px rgba(255, 255, 255, 0.2)",
         $type: "shadow",
         $description: "Small white glow",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "0 0 8px rgba(255, 255, 255, 0.2)",
@@ -948,7 +1218,7 @@ export default {
         $value: "0 0 20px rgba(255, 255, 255, 0.3)",
         $type: "shadow",
         $description: "Medium white glow",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "0 0 20px rgba(255, 255, 255, 0.3)",
@@ -971,7 +1241,7 @@ export default {
         $value: "cubic-bezier(0.16, 1, 0.3, 1)",
         $type: "cubicBezier",
         $description: "Cinematic easing (snappy, slightly bouncy)",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "cubic-bezier(0.16, 1, 0.3, 1)",
@@ -992,7 +1262,7 @@ export default {
         $value: "150ms",
         $type: "duration",
         $description: "Fast animation duration",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "150ms",
@@ -1011,7 +1281,7 @@ export default {
         $value: "300ms",
         $type: "duration",
         $description: "Normal animation duration",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "300ms",
@@ -1030,7 +1300,7 @@ export default {
         $value: "500ms",
         $type: "duration",
         $description: "Slow animation duration",
-        filePath: "tokens.json",
+        filePath: "design-tokens/tokens.json",
         isSource: true,
         original: {
           $value: "500ms",

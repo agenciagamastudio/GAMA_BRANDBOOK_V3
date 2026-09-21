@@ -1,3 +1,6 @@
+"use client";
+
+import { useLang } from "@/components/layout/LanguageProvider";
 import PageLayout from "@/components/layout/PageLayout";
 
 // ─── Swatch helpers ─────────────────────────────────────────────────────────
@@ -91,11 +94,12 @@ function SectionHeader({
 // ─── Page ───────────────────────────────────────────────────────────────────
 
 export default function ColorsPage() {
+  const { t } = useLang();
   return (
     <PageLayout
-      title="Sistema de Cores"
-      accentWord="Cores"
-      subtitle="Paleta completa do GAMA DS V3 — tokens de marca, semânticos e escalas neutras para dark e light mode."
+      title={t("colors")}
+      accentWord={t("colors")}
+      subtitle={t("color_system")}
       breadcrumb={[
         { label: "Foundations", href: "/foundations/colors" },
         { label: "Colors" },

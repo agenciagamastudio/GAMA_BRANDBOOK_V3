@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import PageLayout from "@/components/layout/PageLayout";
+import { useLang } from "@/components/layout/LanguageProvider";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc?: string }) {
   return (
@@ -76,13 +77,14 @@ function ModalShell({ title, children, onClose, size = "md" }: {
 }
 
 export default function ModalsPage() {
+  const { t } = useLang();
   const [open, setOpen] = useState<string | null>(null);
 
   return (
     <PageLayout
-      title="Modals"
-      accentWord="Modals"
-      subtitle="Diálogos modais para confirmações, formulários e conteúdo focado. Overlay com blur, animação sutil e foco gerenciado."
+      title={t("modals")}
+      accentWord={t("modals")}
+      subtitle={t("modals_desc")}
       breadcrumb={[
         { label: "Components", href: "/components" },
         { label: "Organisms", href: "/components/organisms/tables" },

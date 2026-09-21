@@ -2,55 +2,57 @@
 
 import Link from "next/link";
 import { useState } from "react";
-
-const PILLARS = [
-  {
-    title: "Brand",
-    desc: "Identidade visual, voz e aplicações da marca GAMA.",
-    href: "/brand/identity",
-    icon: "◆",
-  },
-  {
-    title: "Foundations",
-    desc: "Cores, tipografia, espaçamento, ícones, efeitos e motion.",
-    href: "/foundations/colors",
-    icon: "◇",
-  },
-  {
-    title: "Components",
-    desc: "Atoms, molecules e organisms tokenizados, prontos para produção.",
-    href: "/components/atoms/buttons",
-    icon: "▣",
-  },
-  {
-    title: "Templates",
-    desc: "Layouts completos para SaaS, landing, dashboard e nichos verticais.",
-    href: "/templates",
-    icon: "▤",
-  },
-];
-
-const NEW_V3 = [
-  { title: "Liquid Glass nativo", desc: "Sistema de glassmorphism em camadas (subtle → intense → illuminated)." },
-  { title: "Volumetric Lighting", desc: "Glows, raios cônicos e blob backgrounds animados." },
-  { title: "Dark + Light", desc: "Tokens duais com transição suave entre temas." },
-  { title: "Custom Scrollbar", desc: "Scrollbar verde, fina, com gradient — em todo o sistema." },
-  { title: "Layout 100% estável", desc: "Zero overflow, sidebar e main scroll independentes." },
-  { title: "PT/EN nativo", desc: "Toggle de idioma persistente em localStorage." },
-];
-
-const QUICK_LINKS = [
-  { label: "Cores", href: "/foundations/colors" },
-  { label: "Tipografia", href: "/foundations/typography" },
-  { label: "Efeitos & Glass", href: "/foundations/effects" },
-  { label: "Buttons", href: "/components/atoms/buttons" },
-  { label: "Tokens", href: "/tokens" },
-  { label: "Landing demo", href: "/landing" },
-];
+import { useLang } from "@/components/layout/LanguageProvider";
 
 export default function HomePage() {
+  const { t } = useLang();
   const [metricsHoveredIdx, setMetricsHoveredIdx] = useState<number | null>(null);
   const [pillarsHoveredIdx, setPillarsHoveredIdx] = useState<number | null>(null);
+
+  const PILLARS = [
+    {
+      title: t("pillar_brand_title"),
+      desc: t("pillar_brand_desc"),
+      href: "/brand/identity",
+      icon: "◆",
+    },
+    {
+      title: t("pillar_foundations_title"),
+      desc: t("pillar_foundations_desc"),
+      href: "/foundations/colors",
+      icon: "◇",
+    },
+    {
+      title: t("pillar_components_title"),
+      desc: t("pillar_components_desc"),
+      href: "/components/atoms/buttons",
+      icon: "▣",
+    },
+    {
+      title: t("pillar_templates_title"),
+      desc: t("pillar_templates_desc"),
+      href: "/templates",
+      icon: "▤",
+    },
+  ];
+
+  const NEW_V3 = [
+    { title: t("feature_liquid_glass"), desc: t("feature_liquid_glass_desc") },
+    { title: t("feature_volumetric"), desc: t("feature_volumetric_desc") },
+    { title: t("feature_darklight"), desc: t("feature_darklight_desc") },
+    { title: t("feature_scrollbar"), desc: t("feature_scrollbar_desc") },
+    { title: t("feature_layout"), desc: t("feature_layout_desc") },
+    { title: t("feature_language"), desc: t("feature_language_desc") },
+  ];
+
+  const QUICK_LINKS = [
+    { label: t("colors"), href: "/foundations/colors" },
+    { label: t("typography"), href: "/foundations/typography" },
+    { label: t("effects"), href: "/foundations/effects" },
+    { label: t("buttons"), href: "/components/atoms/buttons" },
+    { label: t("tokens"), href: "/tokens" },
+    { label: t("showcase"), href: "/landing" },
+  ];
 
   return (
     <div className="page-enter" style={{ position: "relative", overflow: "hidden" }}>
@@ -116,9 +118,7 @@ export default function HomePage() {
               margin: 0,
             }}
           >
-            A nova geração do brandbook GAMA — completamente tokenizado, com Liquid
-            Glass, volumetric lighting e suporte nativo a dark + light. Construído
-            para escalar.
+            {t("pillar_brand_desc")}
           </p>
         </header>
 
@@ -133,10 +133,10 @@ export default function HomePage() {
           }}
         >
           {[
-            { v: "21+", l: "Componentes" },
-            { v: "13+", l: "Páginas" },
-            { v: "100%", l: "Tokenizado" },
-            { v: "Dark + Light", l: "Modos" },
+            { v: "21+", l: t("components") },
+            { v: "13+", l: t("overview") },
+            { v: "100%", l: t("tokens") },
+            { v: "Dark + Light", l: t("settings") },
           ].map((m, idx) => (
             <div
               key={m.l}
@@ -187,7 +187,7 @@ export default function HomePage() {
         {/* Pillars — Enhanced with Glass Material + Emissive Glow */}
         <section style={{ marginBottom: 72 }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 24px" }}>
-            Pilares
+            {t("brand")}
           </h2>
           <div
             style={{
@@ -260,7 +260,7 @@ export default function HomePage() {
                     fontSize: 13,
                   }}
                 >
-                  Explorar →
+                  {t("overview")} →
                 </div>
               </Link>
             ))}
@@ -270,7 +270,7 @@ export default function HomePage() {
         {/* What's new in V3 */}
         <section style={{ marginBottom: 72 }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 24px" }}>
-            Novidades V3
+            {t("foundations")}
           </h2>
           <div
             style={{
@@ -316,7 +316,7 @@ export default function HomePage() {
         {/* Quick links */}
         <section>
           <h2 style={{ fontSize: 24, fontWeight: 800, margin: "0 0 24px" }}>
-            Atalhos
+            {t("home")}
           </h2>
           <div
             style={{

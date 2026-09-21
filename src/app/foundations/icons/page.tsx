@@ -1,3 +1,6 @@
+"use client";
+
+import { useLang } from "@/components/layout/LanguageProvider";
 import PageLayout from "@/components/layout/PageLayout";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc: string }) {
@@ -77,11 +80,12 @@ const ICON_COLORS = [
 ];
 
 export default function IconsPage() {
+  const { t } = useLang();
   return (
     <PageLayout
-      title="Ícones"
-      accentWord="Ícones"
-      subtitle="Material Symbols como sistema principal — 2500+ ícones, 3 estilos (outlined/rounded/sharp), variáveis CSS para tamanho e peso."
+      title={t("icons")}
+      accentWord={t("icons")}
+      subtitle={t("icons_scale")}
       breadcrumb={[
         { label: "Foundations", href: "/foundations/colors" },
         { label: "Icons" },

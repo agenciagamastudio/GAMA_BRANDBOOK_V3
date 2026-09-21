@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import PageLayout from "@/components/layout/PageLayout";
+import { useLang } from "@/components/layout/LanguageProvider";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc?: string }) {
   return (
@@ -94,6 +95,7 @@ function Checkbox({ label, checked, onChange, disabled = false, indeterminate = 
 }
 
 export default function CheckboxesPage() {
+  const { t } = useLang();
   const [single, setSingle] = useState(false);
   const [items, setItems] = useState([
     { label: "Design tokens documentados", checked: true },
@@ -110,9 +112,9 @@ export default function CheckboxesPage() {
 
   return (
     <PageLayout
-      title="Checkboxes"
-      accentWord="Checkboxes"
-      subtitle="Checkboxes permitem seleção de múltiplas opções independentes. Construídos com CSS customizado para consistência visual."
+      title={t("checkboxes")}
+      accentWord={t("checkboxes")}
+      subtitle={t("checkboxes_desc")}
       breadcrumb={[
         { label: "Components", href: "/components" },
         { label: "Atoms", href: "/components/atoms/buttons" },

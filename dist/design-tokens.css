@@ -3,8 +3,7 @@
  */
 
 :root {
-  --color-primary-dim: rgba(136, 206, 17, 0.15); /** Primary with 15% opacity */
-  --color-primary-glow: rgba(136, 206, 17, 0.35); /** Primary with 35% opacity for glow */
+  --color-primary: #88ce11; /** Neon Green - Primary brand color (GAMA V3) */
   --color-functional-success: #10b981; /** Success state color */
   --color-functional-warning: #f59e0b; /** Warning state color */
   --color-functional-error: #e11d48; /** Error state color */
@@ -13,10 +12,20 @@
   --color-background-surface: #272727; /** Surface color */
   --color-background-surface2: #1f1f1f; /** Secondary surface */
   --color-background-surface3: #303030; /** Tertiary surface */
+  --color-background-light: #f8f8f8; /** Light background */
+  --color-background-light-surface: #ffffff; /** Light surface color */
+  --color-background-light-surface2: #f0f0f0; /** Light secondary surface */
+  --color-background-light-surface3: #e8e8e8; /** Light tertiary surface */
   --color-text-primary: #ffffff; /** Primary text color */
   --color-text-secondary: rgba(255, 255, 255, 0.7); /** Secondary text color */
-  --color-border-default: rgba(255, 255, 255, 0.1); /** Default border color */
-  --color-border-green: rgba(136, 206, 17, 0.25); /** Green border accent */
+  --color-text-muted: #71717a; /** Muted text color */
+  --color-text-light-primary: #111111; /** Light theme primary text */
+  --color-text-light-secondary: #555555; /** Light theme secondary text */
+  --color-text-light-muted: #888888; /** Light theme muted text */
+  --color-border-default: rgba(255, 255, 255, 0.1); /** Default border color (dark) */
+  --color-border-green: rgba(136, 206, 17, 0.25); /** Green border accent (dark) */
+  --color-border-light-default: rgba(0, 0, 0, 0.08); /** Default border color (light) */
+  --color-border-light-green: rgba(136, 206, 17, 0.4); /** Green border accent (light) */
   --typography-font-main: 'Poppins', sans-serif; /** Main font family */
   --typography-font-mono: 'JetBrains Mono', monospace; /** Monospace font family */
   --radius-sm: 6px; /** Small border radius */
@@ -41,6 +50,10 @@
   --glass-surface-hover: rgba(255, 255, 255, 0.12); /** Glass surface on hover */
   --glass-border: rgba(255, 255, 255, 0.15); /** Glass border color */
   --glass-highlight: rgba(255, 255, 255, 0.45); /** Glass highlight color */
+  --liquid-glass-blur: 32px; /** Liquid glass blur (refractive) */
+  --liquid-glass-opacity: 0.06; /** Liquid glass opacity */
+  --liquid-glass-distortion: 4px; /** Distortion amount */
+  --liquid-glass-surface: rgba(255, 255, 255, 0.06); /** Liquid glass surface */
   --volumetric-light-opacity: 0.12; /** Volumetric light opacity */
   --volumetric-light-color: rgba(136, 206, 17, 0.12); /** Volumetric light color (god rays) */
   --volumetric-light-spread: 120px; /** Volumetric light spread */

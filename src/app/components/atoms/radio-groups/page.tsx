@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import PageLayout from "@/components/layout/PageLayout";
+import { useLang } from "@/components/layout/LanguageProvider";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc?: string }) {
   return (
@@ -58,6 +59,7 @@ function Radio({ value, selected, onChange, label, disabled = false }: {
 }
 
 export default function RadioGroupsPage() {
+  const { t } = useLang();
   const [plan, setPlan] = useState("pro");
   const [size, setSize] = useState("md");
   const [payment, setPayment] = useState("annual");
@@ -71,9 +73,9 @@ export default function RadioGroupsPage() {
 
   return (
     <PageLayout
-      title="Radio Groups"
-      accentWord="Radio Groups"
-      subtitle="Radio groups para seleção mutuamente exclusiva. Construídos em CSS + state React para total controle visual."
+      title={t("radio_groups")}
+      accentWord={t("radio_groups")}
+      subtitle={t("radio_groups_desc")}
       breadcrumb={[
         { label: "Components", href: "/components" },
         { label: "Atoms", href: "/components/atoms/buttons" },

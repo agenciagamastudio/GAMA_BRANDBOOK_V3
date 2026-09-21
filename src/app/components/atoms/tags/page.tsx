@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import PageLayout from "@/components/layout/PageLayout";
+import { useLang } from "@/components/layout/LanguageProvider";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc?: string }) {
   return (
@@ -47,6 +48,7 @@ const PRESET_TAGS = ["React", "TypeScript", "Next.js", "TailwindCSS", "GraphQL",
 const PRESET_COLORS: (keyof typeof COLORS)[] = ["green", "blue", "purple", "orange", "red", "muted", "green", "blue"];
 
 export default function TagsPage() {
+  const { t } = useLang();
   const [tags, setTags] = useState(["Design System", "Componentes", "Tokens", "Dark Mode"]);
   const [input, setInput] = useState("");
   const [selected, setSelected] = useState<string[]>(["React", "TypeScript"]);
@@ -67,9 +69,9 @@ export default function TagsPage() {
 
   return (
     <PageLayout
-      title="Tags & Chips"
-      accentWord="Tags"
-      subtitle="Tags categorizam conteúdo. Chips são interativos. Ambos suportam remoção, cores semânticas e grupos dinâmicos."
+      title={t("tags_chips")}
+      accentWord={t("tags")}
+      subtitle={t("tags_chips_desc")}
       breadcrumb={[
         { label: "Components", href: "/components" },
         { label: "Atoms", href: "/components/atoms/buttons" },

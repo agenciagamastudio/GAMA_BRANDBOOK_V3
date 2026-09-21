@@ -1,3 +1,6 @@
+"use client";
+
+import { useLang } from "@/components/layout/LanguageProvider";
 import PageLayout from "@/components/layout/PageLayout";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc: string }) {
@@ -66,11 +69,12 @@ const WEIGHTS = [
 ];
 
 export default function TypographyPage() {
+  const { t } = useLang();
   return (
     <PageLayout
-      title="Tipografia"
-      accentWord="Tipografia"
-      subtitle="Sistema tipográfico do GAMA DS V3 — Poppins para display e UI, JetBrains Mono para código."
+      title={t("typography")}
+      accentWord={t("typography")}
+      subtitle={t("typography_hierarchy")}
       breadcrumb={[
         { label: "Foundations", href: "/foundations/colors" },
         { label: "Typography" },

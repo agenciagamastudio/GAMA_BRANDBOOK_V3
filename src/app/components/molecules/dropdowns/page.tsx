@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import PageLayout from "@/components/layout/PageLayout";
+import { useLang } from "@/components/layout/LanguageProvider";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc?: string }) {
   return (
@@ -155,11 +156,12 @@ function SelectDropdown() {
 }
 
 export default function DropdownsPage() {
+  const { t } = useLang();
   return (
     <PageLayout
-      title="Dropdowns"
-      accentWord="Dropdowns"
-      subtitle="Menus contextuais e selects customizados. Construídos com useState + click-outside detection para UX nativa."
+      title={t("dropdowns")}
+      accentWord={t("dropdowns")}
+      subtitle={t("dropdowns_desc")}
       breadcrumb={[
         { label: "Components", href: "/components" },
         { label: "Molecules", href: "/components/molecules/cards" },

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLang } from "@/components/layout/LanguageProvider";
 import PageLayout from "@/components/layout/PageLayout";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc: string }) {
@@ -108,11 +109,12 @@ function AnimationCard({
 }
 
 export default function MotionPage() {
+  const { t } = useLang();
   return (
     <PageLayout
-      title="Motion System"
-      accentWord="Motion"
-      subtitle="Animações CSS nativas do GAMA DS V3 — keyframes e classes utilitárias para movimento consistente."
+      title={t("motion")}
+      accentWord={t("motion")}
+      subtitle={t("motion")}
       breadcrumb={[
         { label: "Foundations", href: "/foundations/colors" },
         { label: "Motion" },

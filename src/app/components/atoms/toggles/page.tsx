@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import PageLayout from "@/components/layout/PageLayout";
+import { useLang } from "@/components/layout/LanguageProvider";
 
 function SectionHeader({ number, title, desc }: { number: string; title: string; desc?: string }) {
   return (
@@ -96,12 +97,13 @@ export default function TogglesPage() {
   });
 
   const toggle = (key: keyof typeof states) => setStates((prev) => ({ ...prev, [key]: !prev[key] }));
+  const { t } = useLang();
 
   return (
     <PageLayout
-      title="Toggles"
-      accentWord="Toggles"
-      subtitle="Toggle switches para preferências e configurações on/off. Mais intuitivo que checkbox quando o contexto é binário e imediato."
+      title={t("toggles")}
+      accentWord={t("toggles")}
+      subtitle={t("toggles_desc")}
       breadcrumb={[
         { label: "Components", href: "/components" },
         { label: "Atoms", href: "/components/atoms/buttons" },

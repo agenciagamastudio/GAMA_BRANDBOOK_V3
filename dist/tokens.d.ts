@@ -2,10 +2,8 @@
  * Do not edit directly, this file was auto-generated.
  */
 
-/** Primary with 15% opacity */
-export const ColorPrimaryDim: string;
-/** Primary with 35% opacity for glow */
-export const ColorPrimaryGlow: string;
+/** Neon Green - Primary brand color (GAMA V3) */
+export const ColorPrimary: string;
 /** Success state color */
 export const ColorFunctionalSuccess: string;
 /** Warning state color */
@@ -22,14 +20,34 @@ export const ColorBackgroundSurface: string;
 export const ColorBackgroundSurface2: string;
 /** Tertiary surface */
 export const ColorBackgroundSurface3: string;
+/** Light background */
+export const ColorBackgroundLight: string;
+/** Light surface color */
+export const ColorBackgroundLightSurface: string;
+/** Light secondary surface */
+export const ColorBackgroundLightSurface2: string;
+/** Light tertiary surface */
+export const ColorBackgroundLightSurface3: string;
 /** Primary text color */
 export const ColorTextPrimary: string;
 /** Secondary text color */
 export const ColorTextSecondary: string;
-/** Default border color */
+/** Muted text color */
+export const ColorTextMuted: string;
+/** Light theme primary text */
+export const ColorTextLightPrimary: string;
+/** Light theme secondary text */
+export const ColorTextLightSecondary: string;
+/** Light theme muted text */
+export const ColorTextLightMuted: string;
+/** Default border color (dark) */
 export const ColorBorderDefault: string;
-/** Green border accent */
+/** Green border accent (dark) */
 export const ColorBorderGreen: string;
+/** Default border color (light) */
+export const ColorBorderLightDefault: string;
+/** Green border accent (light) */
+export const ColorBorderLightGreen: string;
 /** Main font family */
 export const TypographyFontMain: string;
 /** Monospace font family */
@@ -78,6 +96,14 @@ export const GlassSurfaceHover: string;
 export const GlassBorder: string;
 /** Glass highlight color */
 export const GlassHighlight: string;
+/** Liquid glass blur (refractive) */
+export const LiquidGlassBlur: string;
+/** Liquid glass opacity */
+export const LiquidGlassOpacity: string;
+/** Distortion amount */
+export const LiquidGlassDistortion: string;
+/** Liquid glass surface */
+export const LiquidGlassSurface: string;
 /** Volumetric light opacity */
 export const VolumetricLightOpacity: string;
 /** Volumetric light color (god rays) */
