@@ -1,0 +1,6 @@
+{
+  "name": "GAMA Roadmap - Vibe Code para Burros",
+  "description": "Gerador universal de mapas mentais estilo roadmap.sh para qualquer assunto, guiado pelo método dos 3 filtros do Vibe Code para Burros.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
